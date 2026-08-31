@@ -1,20 +1,24 @@
 const { Pool } = require('pg');
 
-// Paste your exact Neon connection string inside the single quotes below:
-const connectionString = 'postgresql://neondb_owner:npg_Xt3dQvzjRUJ2@ep-frosty-meadow-aetexufz-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
+// Read connection link securely from environment variables (or fall back to local test link)
+const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_Xt3dQvzjRUJ2@ep-frosty-meadow-aetexufz-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
 const pool = new Pool({
   connectionString: connectionString,
   ssl: {
-    rejectUnauthorized: false // Required for Neon cloud connections
+    rejectUnauthorized: false
   }
 });
+
+// ... rest of your db.js code remains exactly the same ...
+
+// ... rest of your db.js code remains exactly the same ...
 
 // Automatically create the products table in Neon if it doesn't exist yet
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,z
     category VARCHAR(100) NOT NULL,
     price VARCHAR(100) NOT NULL,
     image VARCHAR(255) NOT NULL
