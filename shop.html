@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electronics Shop | Jomba Tech Institute</title>
+  <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="description">
+    <span>LEARN TODAY. REPAIR TOMORROW. BUILD YOUR FUTURE.</span>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <span class="brand-name">JOMBATECH INSTITUTE</span>
+    </div>
+    <nav class="nav-links">
+      <a href="dashboard.html">Home</a>
+      <a href="computer class.html">computer class</a>
+      <a href="repair.html">repair class</a>
+      <a href="about.html">About & Contact</a>
+    </nav>
+   <div class="nav-actions">
+  <!-- Hidden Checkbox Toggle -->
+  <input type="checkbox" id="search-toggle" class="search-checkbox">
+
+  <!-- Search Icon acting as the button -->
+  <label for="search-toggle" id="search-icon-btn" class="icon-btn" aria-label="Search">🔍</label>
+
+  <!-- Expandable Search Input -->
+  <div class="search-box">
+    <input type="text" placeholder="Search smartphones, laptops..." class="search-input" id="search-input">
+  </div>
+
+  <div class="cart-wrapper">
+    <button class="icon-btn" aria-label="Cart">🛒</button>
+    <span class="cart-badge">0</span>
+  </div>
+</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <!-- Main Content Area -->
+<main class="middle shop-page">
+  <section id="shop-container">
+
+    <!-- Hero Header -->
+    <section class="shop-header">
+      <h1>Latest Tech & Electronics</h1>
+      <p>Quality smartphones, laptops, computer accessories, and repair components in Embu Town.</p>
+    </section>
+
+    <!-- Category Filter Pills -->
+    <div class="category-filters">
+      <button class="filter-btn active" data-category="all">All Items</button>
+      <button class="filter-btn" data-category="phones">Smartphones</button>
+      <button class="filter-btn" data-category="laptops">Laptops</button>
+      <button class="filter-btn" data-category="accessories">Accessories</button>
+      <button class="filter-btn" data-category="repairs">Repairs & Parts</button>
+    </div>
+
+    <!-- Product Grid (Added id="product-grid") -->
+    <section class="product-grid" id="product-grid">
+      <!-- JavaScript will dynamically render cards here -->
+    </section>
+  </section>
+</main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col brand-col">
+        <div class="footer-brand">
+          <h3>JOMBA TECH INSTITUTE</h3>
+        </div>
+        <p class="slogan">LEARN TODAY. REPAIR TOMORROW. BUILD YOUR FUTURE.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul class="contact-info">
+          <li>📍 Embu Town – Yellow Container</li>
+          <li>📞 Call / WhatsApp: 0722 768 168</li>
+          <li>✉️ info@jombatech.com</li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Opening Hours</h4>
+        <p><strong>Shop:</strong> Mon - Sat: 8:00 AM - 7:00 PM</p>
+        <p><strong>Academy:</strong> Mon - Fri: 8:00 AM - 5:00 PM</p>
+        <p>Sun: Closed</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="#">repair class</a></li>
+          <li><a href="computer class.html">Computer Courses</a></li>
+          <li><a href="about.html">About & Contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 JombaTech Institute. All rights reserved.</p>
+    </div>
+  </footer>
+<script src="shop.js"></script>
+</body>
+</html>

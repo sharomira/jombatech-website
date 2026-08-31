@@ -1,0 +1,339 @@
+body{
+    background-color: #1e293b;
+}
+.description{
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: center;
+}
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0b1426; /* Deep navy background */
+  padding: 12px 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Brand & Logo styling */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-name {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+/* Center the navbar content & space elements horizontally */
+
+
+/* Space out individual navigation links */
+.nav-links {
+       display: flex;
+    justify-content: center;   /* Centers all nav groups together in the bar */
+    align-items: center;       /* Vertically aligns items */
+    gap: 40px;                 /* Adds space between brand, links, and actions */
+    padding: 12px 20px;
+    background-color: #0b1426;
+    display: flex;
+    align-items: center;
+    gap: 28px;                 /* Adjust this number to increase/decrease link spacing */
+}
+/* Active Navigation Link Indicator */
+.nav-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+ 
+}
+
+.nav-links a:hover {
+  color: #38bdf8; /* Accent light blue on hover */
+}
+
+.header-image{
+       display: flex;
+    justify-content: center;   /* Centers all nav groups together in the bar */
+    align-items: center;       /* Vertically aligns items */
+    gap: 40px; 
+
+}
+.header-image img{
+   width: 100%;
+   display: block;
+    mask-image: radial-gradient(
+        ellipse at center,
+        black 40%,
+        transparent 80%
+    );
+}
+/* Page Header */
+.page-header {
+    text-align: center;
+    padding: 30px 20px 10px 20px;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.page-header p {
+    color: #cbd5e1;
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Courses Responsive Grid */
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.enroll{
+    border-radius: 20px;
+    background-color: aqua;
+    border: none;
+    cursor: pointer;
+    height: 20px;
+    
+}
+table{
+    width: 500px;
+    border-collapse: separate;
+    box-shadow: aqua;
+    
+}
+.table-container{
+    border-radius: 50px;
+    overflow: hidden;
+    width: 70%;
+}
+th,td{
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: left;
+    
+}
+th{
+    background-color: aqua;
+    color: rgb(36, 33, 33);
+}
+td{
+    background-color: #007bff;
+    color: whitesmoke;
+}
+.enroll:hover{
+    background-color: #007bff;
+}
+.course-card {
+    background: rgba(11, 20, 38, 0.85);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-badge {
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-bottom: 12px;
+}
+
+.course-card h2 {
+    margin: 0 0 10px 0;
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.course-desc {
+    font-size: 0.9rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin-bottom: 16px;
+}
+
+.course-topics {
+    list-style-type: square;
+    padding-left: 20px;
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+/* Enrollment & Timetable Section */
+.enrollment-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 20px auto 40px auto;
+    padding: 0 20px;
+}
+
+.schedule-box, .enrollment-box {
+    flex: 1;
+    min-width: 280px;
+    background: rgba(11, 20, 38, 0.85);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.schedule-box h3, .enrollment-box h3 {
+    color: #ffffff;
+    margin-top: 0;
+}
+
+.schedule-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.schedule-box li {
+    padding: 8px 0;
+    border-bottom: 1px solid #1e293b;
+    font-size: 0.9rem;
+}
+
+.location-tag {
+    font-weight: bold;
+    color: #38bdf8;
+    margin: 15px 0;
+}
+
+.enroll-btn {
+    display: inline-block;
+    background-color: rgb(17, 67, 175); /* WhatsApp Green */
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+}
+
+.enroll-btn:hover {
+    background-color: #1eb954;
+}
+/* Overall Footer Styling */
+.site-footer {
+  background-color: #060c18; /* Dark navy matching navbar */
+  color: #cbd5e1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 40px;
+  border-top: 1px solid #1e293b;
+  margin-top: auto;          /* Keeps footer at the bottom even with little content */
+}
+
+/* 4-Column Grid Layout */
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive columns */
+  gap: 30px;
+}
+
+/* Column Headings */
+.footer-col h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.footer-col h4::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 2px;
+  background-color: #007bff; /* Blue accent underline */
+  margin-top: 6px;
+}
+
+/* Brand Column Details */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.footer-logo {
+  height: 35px;
+  width: auto;
+}
+
+.footer-brand h3 {
+  color: #ffffff;
+  margin: 0;
+}
+
+.slogan {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Lists Styling */
+.contact-info, .footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-info li, .footer-col p {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #38bdf8; /* Accent light blue on hover */
+}
+
+/* Bottom Bar Copyright */
+.footer-bottom {
+  background-color: #030712;
+  text-align: center;
+  padding: 15px 20px;
+  font-size: 0.8rem;
+  color: #64748b;
+  border-top: 1px solid #0f172a;
+}

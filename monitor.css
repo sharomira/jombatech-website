@@ -1,0 +1,37 @@
+/* Search Input Container in Navbar */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 0;
+    opacity: 0;
+    padding: 6px 0;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    background-color: #091527;
+    color: #ffffff;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* Expanded Active State for Search Input */
+.search-container.active .search-input {
+    width: 220px;
+    opacity: 1;
+    padding: 6px 14px;
+    border-color: #2ee0df;
+    margin-left: 8px;
+}
+
+/* Search "No Results" Message Styling */
+.no-results-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    color: #94a3b8;
+    font-size: 1.1rem;
+}

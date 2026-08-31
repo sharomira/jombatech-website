@@ -1,0 +1,348 @@
+body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column; /* Stacks header, middle content, and footer vertically */
+    background-color: #77797c; /* Dark navy color behind the semi-transparent image */
+    color: #ffffff;            /* Keep text legible */
+}
+
+/* Background image overlay with controlled opacity */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background-image: url("phone.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; /* Adjust to 'contain' if you don't want the logo stretched */
+    
+    opacity: 0.5; /* Adjust opacity between 0.0 (fully invisible) and 1.0 (fully visible) */
+    z-index: -1;  /* Keeps the background behind all content */
+}
+
+.description {
+  background-color: rgb(9, 9, 119);
+  color: #ffffff;
+  font-size: 0.85em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  
+  /* Flexbox alignment */
+  display: flex;
+  justify-content: center; /* Horizontally center content */
+  align-items: center;     /* Vertically center content */
+  
+  /* Dynamic height to prevent overlap */
+  min-height: 36px;
+  padding: 6px 16px;
+  box-sizing: border-box;
+}
+
+/* Dark theme navigation bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0b1426; /* Deep navy background */
+  padding: 12px 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Brand & Logo styling */
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-name {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 1.3rem;
+  letter-spacing: 1px;
+}
+
+/* Central links styling */
+.nav-links {
+  display: flex;
+  gap: 28px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-links a:hover {
+  color: #38bdf8; /* Accent light blue on hover */
+}
+
+/* Right side icons & cart badge */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+  opacity: 0.8;
+}
+
+.cart-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 2px 6px;
+}
+
+/* Hide the invisible toggle checkbox */
+.search-checkbox {
+    display: none;
+}
+
+/* Position search box relative to nav actions */
+.nav-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+/* Initially hide the search box */
+.search-box {
+    display: none;
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.search-input {
+    background: #091527;
+    border: 1px solid #2ee0df;
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 15px;
+    outline: none;
+    font-size: 0.85rem;
+    width: 200px;
+}
+
+/* Show search box when icon (label) is clicked */
+.search-checkbox:checked ~ .search-box {
+    display: block;
+}
+
+/* Middle Section: Flexible & Auto-Expanding */
+/* Middle Section Container */
+.middle {
+    flex: 1;                 /* Expands dynamically and pushes the footer down */
+    width: 100%;
+    max-width: 1200px;       /* Keeps middle content neatly centered on wide screens */
+    margin: 0 auto;          /* Centers container horizontally */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 1. Define your desired size at the top of your CSS */
+:root {
+    --phone-size: 30px; /* Change this single value to resize (e.g., 200px, 450px, 50%) */
+}
+
+/* 2. Apply to your image */
+.phone {
+    width: 100%;
+    max-width: var(--phone-size);
+    height: auto;
+    display: block;
+   
+}
+
+.electronics {
+    display: flex;             /* Places child elements side-by-side */
+    align-items: center;       /* Vertically aligns image and text */
+    gap: 20px;  
+    padding-right: 5%;               /* Space between the image and the text */
+}
+
+.electronics-text {
+    display: flex;
+    flex-direction: column;    /* Keeps heading and subheading stacked vertically */
+}
+
+.electronics-text h1, 
+.electronics-text h4 {
+    margin: 0;                 /* Removes default spacing for clean alignment */
+    color: rgb(249, 249, 250);
+
+}
+.store{
+  border-radius: 5px;
+  width: 100px;
+  background-color: #007bff;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+
+}
+.Courses {
+    display: flex;             /* Places child elements (image and text box) side-by-side */
+    align-items: center;       /* Vertically aligns image and text */
+    gap: 20px; /* Space between the image and the text */
+                  
+}
+
+.Courses img {
+    height: 100px;
+    width: 200px;
+    object-fit: cover;         /* Prevents the image from stretching */
+}
+
+.computer {
+    display: flex;
+    flex-direction: column;    /* Keeps heading and course list stacked vertically */
+}
+
+.computer h1, 
+.computer h4 {
+    margin: 0; /* Removes default spacing for clean alignment */
+    color: #ffffff;  
+             
+}
+/* Overall Footer Styling */
+.site-footer {
+  background-color: #060c18; /* Dark navy matching navbar */
+  color: #cbd5e1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 40px;
+  border-top: 1px solid #1e293b;
+  margin-top: auto;          /* Keeps footer at the bottom even with little content */
+}
+
+/* 4-Column Grid Layout */
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 40px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive columns */
+  gap: 30px;
+}
+
+/* Column Headings */
+.footer-col h4 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.footer-col h4::after {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 2px;
+  background-color: #007bff; /* Blue accent underline */
+  margin-top: 6px;
+}
+
+/* Brand Column Details */
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.footer-logo {
+  height: 35px;
+  width: auto;
+}
+
+.footer-brand h3 {
+  color: #ffffff;
+  margin: 0;
+}
+
+.slogan {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Lists Styling */
+.contact-info, .footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contact-info li, .footer-col p {
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: #38bdf8; /* Accent light blue on hover */
+}
+
+/* Bottom Bar Copyright */
+.footer-bottom {
+  background-color: #030712;
+  text-align: center;
+  padding: 15px 20px;
+  font-size: 0.8rem;
+  color: #64748b;
+  border-top: 1px solid #0f172a;
+}

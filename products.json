@@ -1,0 +1,150 @@
+[
+  {
+    "id": 1,
+    "title": "8gb flash drive",
+    "category": "accessories",
+    "brand": "oraimo",
+    "price": "KSh 800",
+    "image": "flash drive.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Dell battery",
+    "category": "accessories",
+    "brand": "Dell battert",
+    "price": "KSh 3,500",
+    "image": "dell battery.jpg"
+  },
+  {
+    "id": 3,
+    "title": "monitors",
+    "category": "accessories",
+    "brand": "hp",
+    "price": "KSh 8,000",
+    "image": "monitors.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Wireless Bluetooth Earphones",
+    "category": "accessories",
+    "brand": "Apple",
+    "price": "KSh 500",
+    "image": "necksets.jpg"
+  },
+  {
+    "id": 5,
+    "title": "Wireless Earphones",
+    "category": "accessories",
+    "subcategory": "earphones",
+    "price": "KSh 300",
+    "image": "wiriless earphones.jpg"
+  },
+  {
+    "id": 6,
+    "title": "headset",
+    "category": "accessories",
+    "subcategory": "headsets",
+    "price": "KSh 1,000",
+    "image": "headsets.jpg"
+  },
+  {
+    
+    "id": 7,
+    "title": "hp big pin charger",
+    "category": "laptops",
+    "subcategory": "hp charger",
+    "price": "KSh 1,500 ",
+    "image": "hp big pin charger.jpg"
+  
+  },
+  {
+    
+    "id": 8,
+    "title": "hp blue pin charger",
+    "category": "laptops",
+    "subcategory": "hp charger",
+    "price": "KSh 1,500",
+    "image": "hp blue pin charger.jpg"
+  
+  },
+  {
+    
+    "id": 9,
+    "title": "hp external battery",
+    "category": "laptops",
+    "subcategory": "hp battery",
+    "price": "KSh 3,500 ",
+    "image": "hp external battery.jpg"
+  
+  },
+  {
+    
+    "id": 10,
+    "title": "hp internal battery",
+    "category": "laptops",
+    "subcategory": "hp battery",
+    "price": "KSh 3,500 ",
+    "image": "hp internal battery.jpg"
+  
+  },
+  {
+    
+    "id": 11,
+    "title": "hp type c charger",
+    "category": "laptops",
+    "subcategory": "hp charger",
+    "price": "KSh 2,000 ",
+    "image": "hp type c charger.jpg"
+  
+  },
+  {
+    
+    "id": 12,
+    "title": "lenovo thinkpad battery",
+    "category": "laptops",
+    "subcategory": "lenovo battery",
+    "price": "KSh 2,500",
+    "image": "lenovo thinkpad battery.jpg"
+  
+  },
+  {
+    
+    "id": 13,
+    "title": "thinkpad charger",
+    "category": "laptops",
+    "subcategory": "lenovo thinkpad charger",
+    "price": "KSh 2,000 ",
+    "image": "thinkpad charger.jpg"
+  
+  },
+  {
+    
+    "id": 8,
+    "title": "",
+    "category": "",
+    "subcategory": "",
+    "price": "KSh ",
+    "image": ""
+  
+  },
+{
+    
+    "id": 8,
+    "title": "",
+    "category": "",
+    "subcategory": "",
+    "price": "KSh ",
+    "image": ""
+  
+  },
+  {
+    
+    "id": 8,
+    "title": "",
+    "category": "",
+    "subcategory": "",
+    "price": "KSh ",
+    "image": ""
+  
+  }
+]

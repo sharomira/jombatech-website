@@ -1,0 +1,387 @@
+/* Core Page Layout & Dark Theme Setup */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #050b14;
+    color: #ffffff;
+}
+
+.description {
+    text-align: center;
+}
+
+/* Top Announcement Banner */
+.top-announcement {
+    background-color: #7ef2e7;
+    color: #050b14;
+    text-align: center;
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Main Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background-color: #060e1b;
+    border-bottom: 1px solid #0f223d;
+}
+
+/* Glowing Pill Brand Header */
+.brand-name {
+    display: inline-block;
+    padding: 8px 22px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+    border: 1.5px solid #2ee0df;
+    border-radius: 25px;
+    background: rgba(46, 224, 223, 0.1);
+    box-shadow: 0 0 15px rgba(46, 224, 223, 0.5), inset 0 0 8px rgba(46, 224, 223, 0.2);
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.nav-links a.active, .nav-links a:hover {
+    color: #2ee0df;
+}
+
+.nav-links a.active {
+    padding: 6px 16px;
+    border: 1px solid #2ee0df;
+    border-radius: 15px;
+    background: rgba(46, 224, 223, 0.15);
+}
+
+/* Container for nav buttons and search box */
+.nav-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    transition: opacity 0.2s;
+}
+
+/* Hide the invisible toggle checkbox */
+.search-checkbox {
+    display: none;
+}
+
+/* Position search box dynamically to the left of the search icon */
+.search-box {
+    display: none;
+    position: absolute;
+    right: 100%; /* Positions the input box neatly to the left of the icons */
+    margin-right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+/* Search Bar Input Styling */
+.search-input {
+    background: #091527;
+    border: 1px solid #2ee0df;
+    color: #ffffff;
+    padding: 6px 14px;
+    border-radius: 15px;
+    outline: none;
+    font-size: 0.85rem;
+    width: 200px;
+    box-shadow: 0 0 10px rgba(46, 224, 223, 0.2);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus effect when user clicks inside input */
+.search-input:focus {
+    border-color: #5ce1e6;
+    box-shadow: 0 0 12px rgba(92, 225, 230, 0.4);
+}
+
+/* Reveal Search Box when Checkbox is Checked */
+.search-checkbox:checked ~ .search-box {
+    display: block;
+}
+
+/* Cart Badge Styling */
+.cart-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background-color: #007bff;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 2px 6px;
+}
+
+/* Shop Header Section */
+.shop-header {
+    text-align: center;
+    padding: 40px 20px 20px 20px;
+}
+
+.shop-header h1 {
+    font-size: 2.2rem;
+    margin: 0 0 10px 0;
+    color: #ffffff;
+}
+
+.shop-header p {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin: 0 0 25px 0;
+}
+
+/* Filter Buttons */
+.category-filters {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.filter-btn {
+    background-color: transparent;
+    border: 1px solid #1e3a5f;
+    color: #ffffff;
+    padding: 8px 22px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    display: inline-block;
+    user-select: none;
+}
+
+/* Highlight Active / Hover Filter Button */
+.filter-btn.active, 
+.filter-btn:hover {
+    background-color: #5ce1e6;
+    color: #050b14;
+    border-color: #5ce1e6;
+    font-weight: 600;
+    box-shadow: 0 0 12px rgba(92, 225, 230, 0.4);
+}
+
+/* Product Cards Grid */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1240px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+@media (max-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Dynamically Generated Product Card Styling */
+.product-card {
+    background: #091527;
+    border: 1px solid #142c4c;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    border-color: #2ee0df;
+    box-shadow: 0 0 15px rgba(46, 224, 223, 0.3);
+}
+
+.product-img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-title {
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+    color: #ffffff;
+}
+
+.product-price {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #2ee0df;
+    margin: 0 0 14px 0;
+}
+
+.add-to-cart-btn {
+    text-align: center;
+    background-color: transparent;
+    color: #5ce1e6;
+    border: 1px solid #1e3a5f;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: auto;
+    transition: all 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #2ee0df;
+    color: #050b14;
+    border-color: #2ee0df;
+    font-weight: bold;
+}
+
+/* WhatsApp Order Button */
+.whatsapp-order-btn {
+    display: inline-block;
+    text-align: center;
+    background-color: #25d366;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 10px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-top: auto;
+    box-shadow: 0 0 10px rgba(37, 211, 102, 0.3);
+    transition: all 0.2s ease;
+}
+
+.whatsapp-order-btn:hover {
+    background-color: #1eb954;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.6);
+    transform: translateY(-1px);
+}
+
+/* Global WhatsApp CTA */
+.global-action {
+    text-align: center;
+    margin: 40px 0 60px 0;
+}
+
+.register-pill-btn {
+    display: inline-block;
+    padding: 10px 28px;
+    background: #25d366;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    box-shadow: 0 0 12px rgba(37, 211, 102, 0.4);
+    transition: background-color 0.2s ease;
+}
+
+.register-pill-btn:hover {
+    background-color: #1eb954;
+}
+
+/* Footer Section */
+.site-footer {
+    background-color: #040810;
+    border-top: 1px solid #0f223d;
+    padding: 40px 20px 20px 20px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-col {
+    flex: 1;
+    min-width: 200px;
+}
+
+.footer-col h3, .footer-col h4 {
+    color: #ffffff;
+    margin-top: 0;
+}
+
+.footer-col p, .footer-col ul {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul a {
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.footer-col ul a:hover {
+    color: #2ee0df;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #0f223d;
+    margin-top: 30px;
+    padding-top: 20px;
+    color: #64748b;
+    font-size: 0.8rem;
+}
