@@ -1,70 +1,48 @@
 const express = require('express');
 const path = require('path');
-const db = require('./db.js');
+const db = require('./db');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(__dirname)); // Serves shop.html, shop.css, shop.js, images directly
+app.use(express.urlencoded({ extended: true }));
 
-// Setup EJS for admin rendering
+// Set EJS view engine if using template files
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// API Endpoint for shop.js to fetch items
+// Serve static assets from 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Root Route (Fixes "Cannot GET /")
+app.get('/', (req, res) => {
+  // Option A: If using index.html or dashboard.html in 'public'
+  // res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+
+  // Option B: If rendering an EJS template
+  // res.render('index');
+
+  // Fallback: Serves static index.html or sends basic welcome message
+  res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+    if (err) {
+      res.send('Welcome to Jombatech Website! Server is live.');
+    }
+  });
+});
+
+// Example API route for fetching products from Neon PostgreSQL
 app.get('/api/products', (req, res) => {
   db.all('SELECT * FROM products', [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
     res.json(rows);
   });
 });
 
-// Admin Panel Page
-app.get('/admin', (req, res) => {
-  db.all('SELECT * FROM products', [], (err, rows) => {
-    if (err) return res.status(500).send('Database error');
-    res.render('admin', { products: rows });
-  });
-});
-
-// Add Product Route
-app.post('/admin/add-product', (req, res) => {
-  const { title, category, price, image } = req.body;
-  const sql = 'INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)';
-  
-  db.run(sql, [title, category, price, image], (err) => {
-    if (err) console.error(err.message);
-    res.redirect('/admin');
-  });
-});
-
-// Delete Product Route
-app.post('/admin/delete-product/:id', (req, res) => {
-  const productId = req.params.id;
-  db.run('DELETE FROM products WHERE id = ?', productId, (err) => {
-    if (err) console.error(err.message);
-    res.redirect('/admin');
-  });
-});
-
-// Update Product Route
-app.post('/admin/update-product/:id', (req, res) => {
-  const productId = req.params.id;
-  const { title, category, price, image } = req.body;
-  
-  const sql = 'UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?';
-  
-  db.run(sql, [title, category, price, image, productId], (err) => {
-    if (err) {
-      console.error('Failed to update product:', err.message);
-    }
-    res.redirect('/admin');
-  });
-});
-
+// Start Server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

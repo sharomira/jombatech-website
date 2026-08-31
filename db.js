@@ -9,6 +9,7 @@ const pool = new Pool({
   }
 });
 
+// Standardized PostgreSQL Table Creation Query
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
