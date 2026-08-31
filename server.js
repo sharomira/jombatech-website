@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
   // res.render('index');
 
   // Fallback: Serves static index.html or sends basic welcome message
-  res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'), (err) => {
     if (err) {
       res.send('Welcome to Jombatech Website! Server is live.');
     }
