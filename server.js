@@ -32,16 +32,18 @@ app.get('/', (req, res) => {
   });
 });
 
-// Example API route for fetching products from Neon PostgreSQL
-app.get('/api/products', (req, res) => {
-  db.all('SELECT * FROM products', [], (err, rows) => {
+// Root Route: Fetch products from database and render views/admin.ejs
+app.get('/', (req, res) => {
+  db.all('SELECT * FROM products', [], (err, products) => {
     if (err) {
-      return res.status(500).json({ error: err.message });
+      console.error('Error fetching products from database:', err.message);
+      // Renders admin.ejs with an empty array if there is a DB error so the site doesn't crash
+      return res.render('admin', { products: [] });
     }
-    res.json(rows);
+    // Renders views/admin.ejs and passes the products array to the template
+    res.render('admin', { products });
   });
 });
-
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
