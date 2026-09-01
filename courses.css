@@ -166,6 +166,13 @@ td{
     margin-bottom: 12px;
 }
 
+.product-grid {
+  display: grid;
+  /* Drops down to 1 or 2 columns on small screens, expands up to 4+ on large screens */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
 .course-card h2 {
     margin: 0 0 10px 0;
     color: #ffffff;

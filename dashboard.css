@@ -1,5 +1,4 @@
 :root {
-  --phone-size: 180px; /* Adjusted default size for hero/featured phone elements */
   --primary-accent: #007bff;
   --hover-accent: #38bdf8;
   --bg-dark-navy: #0b1426;
@@ -17,7 +16,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #0b1426;
+  background-color: var(--bg-dark-navy);
   color: var(--text-main);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-x: hidden;
@@ -35,7 +34,7 @@ body::before {
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  opacity: 0.25; /* Reduced slightly for improved text readability */
+  opacity: 0.25;
   z-index: -1;
 }
 
@@ -43,7 +42,7 @@ body::before {
 .description {
   background-color: #090977;
   color: var(--text-main);
-  font-size: 0.85em;
+  font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 600;
   letter-spacing: 0.5px;
   display: flex;
@@ -60,7 +59,7 @@ body::before {
   justify-content: space-between;
   align-items: center;
   background-color: var(--bg-dark-navy);
-  padding: 12px 40px;
+  padding: 12px clamp(15px, 4vw, 40px);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
@@ -74,7 +73,7 @@ body::before {
 }
 
 .logo {
-  height: 40px;
+  height: clamp(30px, 4vw, 40px);
   width: auto;
   object-fit: contain;
 }
@@ -82,20 +81,20 @@ body::before {
 .brand-name {
   color: var(--text-main);
   font-weight: 800;
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
   letter-spacing: 1px;
 }
 
 .nav-links {
   display: flex;
-  gap: 28px;
+  gap: clamp(12px, 2.5vw, 28px);
   align-items: center;
 }
 
 .nav-links a {
   color: var(--text-sub);
   text-decoration: none;
-  font-size: 0.95rem;
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
   font-weight: 500;
   transition: color 0.2s ease-in-out;
 }
@@ -125,24 +124,6 @@ body::before {
   opacity: 0.8;
 }
 
-.cart-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  background-color: var(--primary-accent);
-  color: white;
-  font-size: 0.7rem;
-  font-weight: bold;
-  border-radius: 50%;
-  padding: 2px 6px;
-}
-
 .search-checkbox {
   display: none;
 }
@@ -164,84 +145,94 @@ body::before {
   border-radius: 15px;
   outline: none;
   font-size: 0.85rem;
-  width: 200px;
+  width: 180px;
 }
 
 .search-checkbox:checked ~ .search-box {
   display: block;
 }
 
-/* Main Dashboard / Middle Content */
+/* Main Dashboard Container */
 .middle {
   flex: 1;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 30px 20px;
+  padding: clamp(15px, 3vw, 30px) clamp(12px, 2.5vw, 20px);
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
 }
 
-.phone {
-  width: 100%;
-  max-width: var(--phone-size);
-  height: auto;
-  display: block;
-  object-fit: contain;
-  border-radius: 8px;
+/* Card Grid Layout */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
 }
 
-/* Section Cards: Electronics & Courses */
-.electronics, .Courses {
+.card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 24px;
+  padding: clamp(16px, 3vw, 24px);
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(4px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.electronics-text, .computer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.electronics-text h1, .computer h1 {
-  margin: 0;
-  font-size: 1.6rem;
-  color: var(--text-main);
-}
-
-.electronics-text h4, .computer h4 {
-  margin: 0;
-  font-weight: 400;
-  color: var(--text-sub);
-  line-height: 1.4;
-}
-
-.Courses img {
+.card-img {
+  width: 40%;
+  max-width: 180px;
   height: 120px;
-  width: 180px;
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.card-content h1 {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  color: var(--text-main);
+}
+
+.card-content h4 {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  color: var(--text-sub);
+  line-height: 1.3;
+}
+
+.store-link {
+  text-decoration: none;
+  width: fit-content;
+  margin-top: 6px;
 }
 
 .store {
-  margin-top: 8px;
   border-radius: 6px;
   padding: 8px 16px;
-  min-width: 110px;
+  min-width: 100px;
   background-color: var(--primary-accent);
   border: none;
   color: var(--text-main);
   font-weight: 600;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
@@ -265,13 +256,13 @@ body::before {
   margin: 0 auto;
   padding: 0 20px 40px 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
 }
 
 .footer-col h4 {
   color: var(--text-main);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   margin-bottom: 16px;
   position: relative;
 }
@@ -315,7 +306,7 @@ body::before {
 }
 
 .contact-info li, .footer-col p {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   margin-bottom: 8px;
   line-height: 1.5;
 }
@@ -327,7 +318,7 @@ body::before {
 .footer-links a {
   color: var(--text-sub);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   transition: color 0.2s ease;
 }
 
@@ -345,36 +336,36 @@ body::before {
 }
 
 /* ==========================================
-   Mobile & Tablet Responsive Adjustments
+   Mobile & Tablet Adaptations
    ========================================== */
 
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    padding: 15px 20px;
+    padding: 14px 16px;
     gap: 12px;
   }
 
   .nav-links {
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
-  .electronics, .Courses {
+  .card {
     flex-direction: column;
     text-align: center;
-    padding: 20px;
+    padding: 20px 16px;
   }
 
-  .electronics-text, .computer {
-    align-items: center;
-  }
-
-  .Courses img {
+  .card-img {
     width: 100%;
-    max-width: 260px;
-    height: auto;
+    max-width: 220px;
+    height: 140px;
+  }
+
+  .card-content {
+    align-items: center;
   }
 
   .search-box {
@@ -386,12 +377,13 @@ body::before {
 }
 
 @media (max-width: 480px) {
-  .middle {
-    padding: 15px 10px;
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .footer-container {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 24px;
   }
 }

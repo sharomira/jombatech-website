@@ -1,118 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="dashboard.css">
-    <title>jombatech | shop & learn</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="dashboard.css">
+  <title>Jombatech | Shop & Learn</title>
 </head>
 <body>
-    <div class="description">jombatech shop & earn</div>
-     <header class="navbar">
+  <div class="description">Jombatech Shop & Learn</div>
+  
+  <header class="navbar">
     <div class="nav-brand">
-    <img src="logo.jpg" alt="Jomba Tech Logo" class="logo">
-    <span class="brand-name">JOMBATECH</span>
-  </div>
-  
-   <nav class="nav-links">
-    <a href="shop.html">ELECTRONICS SHOP</a>
-    <a href="computer class.html">COMPUTER CLASSES</a>
-    <a href="#schedules">REPAIR CLASSES</a>
-  </nav>
-
-<div class="nav-actions">
-  <!-- Hidden Checkbox Toggle -->
-  <input type="checkbox" id="search-toggle" class="search-checkbox">
-
-  <!-- Search Icon acting as the button -->
-  <label for="search-toggle" id="home-search-icon-btn" class="icon-btn" aria-label="Search">🔍</label>
-
-  <!-- Expandable Search Input -->
-  <div class="search-box">
-    <input type="text" id="home-search-input" placeholder="Search smartphones, laptops..." class="search-input">
-  </div>
-
-  <div class="cart-wrapper">
-    <button class="icon-btn" aria-label="Cart">🛒</button>
-    <span class="cart-badge">0</span>
-  </div>
-</div>
-  
-  </header>
-  <main class="main content">
-  <div class="middle">
-   
-<div class="electronics">
-
-    <img style="width: 300px;
-    height: 100px;" src="accessories.jpg" alt="Accessories">
-
-    <div class="electronics-text">
-        <h1>Shop Latest Tech</h1>
-        <h4>Phones, Laptops & Accessories</h4>
-       <a href="shop.html"> <button class="store" type="submit">Browse Store</button></a>
+      <img src="logo.jpg" alt="Jomba Tech Logo" class="logo">
+      <span class="brand-name">JOMBATECH</span>
     </div>
+  
+    <nav class="nav-links">
+      <a href="shop.html">ELECTRONICS SHOP</a>
+      <a href="computer class.html">COMPUTER CLASSES</a>
+      <a href="#schedules">REPAIR CLASSES</a>
+    </nav>
 
-    <div class="Courses">
+    <div class="nav-actions">
+      <!-- Hidden Checkbox Toggle -->
+      <input type="checkbox" id="search-toggle" class="search-checkbox">
 
-<img style="width: 500px;
-height: 300px;"  src="computer classes.jpg" alt="computer">
+      <!-- Search Icon acting as the button -->
+      <label for="search-toggle" id="home-search-icon-btn" class="icon-btn" aria-label="Search">🔍</label>
 
-
-
-</div>
- 
-</div>
-  </main>
-    <footer class="site-footer">
-  <div class="footer-container">
-    
-    <!-- Column 1: Brand Info -->
-    <div class="footer-col brand-col">
-      <div class="footer-brand">
-        <img src="logo.jpg" alt="Jomba Tech Logo" class="footer-logo">
-        <h3>JOMBATECH</h3>
+      <!-- Expandable Search Input -->
+      <div class="search-box">
+        <input type="text" id="home-search-input" placeholder="Search smartphones, laptops..." class="search-input">
       </div>
-      <p class="slogan">LEARN TODAY. REPAIR TOMORROW. BUILD YOUR FUTURE.</p>
+    </div>
+  </header>
+
+  <main class="middle">
+    <div class="product-grid">
+      <!-- Card 1: Electronics -->
+      <div class="card electronics">
+        <img src="accessories.jpg" alt="Accessories" class="card-img">
+        <div class="card-content">
+          <h1>Shop Latest Tech</h1>
+          <h4>Phones, Laptops & Accessories</h4>
+          <a href="shop.html" class="store-link"><button class="store" type="button">Browse Store</button></a>
+        </div>
+      </div>
+
+      <!-- Card 2: Computer Courses -->
+      <div class="card courses">
+        <img src="computer classes.jpg" alt="Computer Classes" class="card-img">
+        <div class="card-content">
+          <h1>Computer Classes</h1>
+          <h4>Master Essential Software & Office Applications</h4>
+          <a href="computer class.html" class="store-link"><button class="store" type="button">View Courses</button></a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      
+      <!-- Column 1: Brand Info -->
+      <div class="footer-col brand-col">
+        <div class="footer-brand">
+          <img src="logo.jpg" alt="Jomba Tech Logo" class="footer-logo">
+          3.JOMBATECH</h3>
+        </div>
+        <p class="slogan">LEARN TODAY. REPAIR TOMORROW. BUILD YOUR FUTURE.</p>
+      </div>
+
+      <!-- Column 2: Contact & Location -->
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul class="contact-info">
+          <li>📍 Embu Town – Yellow Container</li>
+          <li>📞 Call / WhatsApp: 0722 768 168</li>
+          <li>✉️ info@jombatech.com</li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Hours -->
+      <div class="footer-col">
+        <h4>Opening Hours</h4>
+        <p><strong>Shop:</strong> Mon - Sat: 8:00 AM - 8:00 PM</p>
+        <p><strong>Academy:</strong> Mon - Fri: 8:00 AM - 5:00 PM</p>
+        <p>Sun: Closed</p>
+      </div>
+
+      <!-- Column 4: Quick Links -->
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul class="footer-links">
+          <li><a href="shop.html">Electronics Store</a></li>
+          <li><a href="computer class.html">Computer Courses</a></li>
+          <li><a href="#schedules">Repair Classes</a></li>
+          <li><a href="login.html">Student Portal</a></li>
+        </ul>
+      </div>
+
     </div>
 
-    <!-- Column 2: Contact & Location -->
-    <div class="footer-col">
-      <h4>Contact Us</h4>
-      <ul class="contact-info">
-        <li>📍 Embu Town – Yellow Container</li>
-        <li>📞 Call / WhatsApp: 0722 768 168</li>
-        <li>✉️ info@jombatech.com</li>
-      </ul>
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p>&copy; 2026 Jomba Tech Institute. All rights reserved.</p>
     </div>
-
-    <!-- Column 3: Hours -->
-    <div class="footer-col">
-      <h4>Opening Hours</h4>
-      <p><strong>Shop:</strong> Mon - Sat: 8:00 AM - 8:00 PM</p>
-      <p><strong>Academy:</strong> Mon - Fri: 8:00 AM - 5:00 PM</p>
-      <p>Sun: Closed</p>
-    </div>
-
-    <!-- Column 4: Quick Links -->
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <ul class="footer-links">
-        <li><a href="shop.html">Electronics Store</a></li>
-        <li><a href="computer class.html">Computer Courses</a></li>
-        <li><a href="#schedules">repair classes</a></li>
-        <li><a href="login.html">Student Portal</a></li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- Bottom Bar -->
-  <div class="footer-bottom">
-    <p>&copy; 2026 Jomba Tech Institute. All rights reserved.</p>
-  </div>
-
   </footer>
+
   <script src="dashboard.js"></script>
 </body>
 </html>
