@@ -1,62 +1,72 @@
+:root {
+  --phone-size: 180px; /* Adjusted default size for hero/featured phone elements */
+  --primary-accent: #007bff;
+  --hover-accent: #38bdf8;
+  --bg-dark-navy: #0b1426;
+  --card-bg: rgba(11, 20, 38, 0.85);
+  --border-color: #1e293b;
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;
+  --text-sub: #cbd5e1;
+}
+
 body {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column; /* Stacks header, middle content, and footer vertically */
-    background-color: #77797c; /* Dark navy color behind the semi-transparent image */
-    color: #ffffff;            /* Keep text legible */
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #0b1426;
+  color: var(--text-main);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Background image overlay with controlled opacity */
 body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    background-image: url("phone.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover; /* Adjust to 'contain' if you don't want the logo stretched */
-    
-    opacity: 0.5; /* Adjust opacity between 0.0 (fully invisible) and 1.0 (fully visible) */
-    z-index: -1;  /* Keeps the background behind all content */
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("phone.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.25; /* Reduced slightly for improved text readability */
+  z-index: -1;
 }
 
+/* Top Announcement Banner */
 .description {
-  background-color: rgb(9, 9, 119);
-  color: #ffffff;
+  background-color: #090977;
+  color: var(--text-main);
   font-size: 0.85em;
   font-weight: 600;
   letter-spacing: 0.5px;
-  
-  /* Flexbox alignment */
   display: flex;
-  justify-content: center; /* Horizontally center content */
-  align-items: center;     /* Vertically center content */
-  
-  /* Dynamic height to prevent overlap */
+  justify-content: center;
+  align-items: center;
   min-height: 36px;
   padding: 6px 16px;
   box-sizing: border-box;
 }
 
-/* Dark theme navigation bar */
+/* Navigation Bar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #0b1426; /* Deep navy background */
+  background-color: var(--bg-dark-navy);
   padding: 12px 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-/* Brand & Logo styling */
 .nav-brand {
   display: flex;
   align-items: center;
@@ -70,13 +80,12 @@ body::before {
 }
 
 .brand-name {
-  color: #ffffff;
+  color: var(--text-main);
   font-weight: 800;
   font-size: 1.3rem;
   letter-spacing: 1px;
 }
 
-/* Central links styling */
 .nav-links {
   display: flex;
   gap: 28px;
@@ -84,7 +93,7 @@ body::before {
 }
 
 .nav-links a {
-  color: #cbd5e1;
+  color: var(--text-sub);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
@@ -92,11 +101,11 @@ body::before {
 }
 
 .nav-links a:hover {
-  color: #38bdf8; /* Accent light blue on hover */
+  color: var(--hover-accent);
 }
 
-/* Right side icons & cart badge */
 .nav-actions {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -105,7 +114,7 @@ body::before {
 .icon-btn {
   background: none;
   border: none;
-  color: #ffffff;
+  color: var(--text-main);
   font-size: 1.1rem;
   cursor: pointer;
   padding: 4px;
@@ -126,7 +135,7 @@ body::before {
   position: absolute;
   top: -6px;
   right: -8px;
-  background-color: #007bff;
+  background-color: var(--primary-accent);
   color: white;
   font-size: 0.7rem;
   font-weight: bold;
@@ -134,143 +143,134 @@ body::before {
   padding: 2px 6px;
 }
 
-/* Hide the invisible toggle checkbox */
 .search-checkbox {
-    display: none;
+  display: none;
 }
 
-/* Position search box relative to nav actions */
-.nav-actions {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-/* Initially hide the search box */
 .search-box {
-    display: none;
-    position: absolute;
-    right: 80px;
-    top: 50%;
-    transform: translateY(-50%);
+  display: none;
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
 }
 
 .search-input {
-    background: #091527;
-    border: 1px solid #2ee0df;
-    color: #ffffff;
-    padding: 6px 14px;
-    border-radius: 15px;
-    outline: none;
-    font-size: 0.85rem;
-    width: 200px;
+  background: #091527;
+  border: 1px solid #2ee0df;
+  color: var(--text-main);
+  padding: 6px 14px;
+  border-radius: 15px;
+  outline: none;
+  font-size: 0.85rem;
+  width: 200px;
 }
 
-/* Show search box when icon (label) is clicked */
 .search-checkbox:checked ~ .search-box {
-    display: block;
+  display: block;
 }
 
-/* Middle Section: Flexible & Auto-Expanding */
-/* Middle Section Container */
+/* Main Dashboard / Middle Content */
 .middle {
-    flex: 1;                 /* Expands dynamically and pushes the footer down */
-    width: 100%;
-    max-width: 1200px;       /* Keeps middle content neatly centered on wide screens */
-    margin: 0 auto;          /* Centers container horizontally */
-    padding: 20px;
-    box-sizing: border-box;
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
-/* 1. Define your desired size at the top of your CSS */
-:root {
-    --phone-size: 30px; /* Change this single value to resize (e.g., 200px, 450px, 50%) */
-}
-
-/* 2. Apply to your image */
 .phone {
-    width: 100%;
-    max-width: var(--phone-size);
-    height: auto;
-    display: block;
-   
+  width: 100%;
+  max-width: var(--phone-size);
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
-.electronics {
-    display: flex;             /* Places child elements side-by-side */
-    align-items: center;       /* Vertically aligns image and text */
-    gap: 20px;  
-    padding-right: 5%;               /* Space between the image and the text */
+/* Section Cards: Electronics & Courses */
+.electronics, .Courses {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
 }
 
-.electronics-text {
-    display: flex;
-    flex-direction: column;    /* Keeps heading and subheading stacked vertically */
+.electronics-text, .computer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.electronics-text h1, 
-.electronics-text h4 {
-    margin: 0;                 /* Removes default spacing for clean alignment */
-    color: rgb(249, 249, 250);
-
+.electronics-text h1, .computer h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--text-main);
 }
-.store{
-  border-radius: 5px;
-  width: 100px;
-  background-color: #007bff;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
 
-}
-.Courses {
-    display: flex;             /* Places child elements (image and text box) side-by-side */
-    align-items: center;       /* Vertically aligns image and text */
-    gap: 20px; /* Space between the image and the text */
-                  
+.electronics-text h4, .computer h4 {
+  margin: 0;
+  font-weight: 400;
+  color: var(--text-sub);
+  line-height: 1.4;
 }
 
 .Courses img {
-    height: 100px;
-    width: 200px;
-    object-fit: cover;         /* Prevents the image from stretching */
+  height: 120px;
+  width: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
 }
 
-.computer {
-    display: flex;
-    flex-direction: column;    /* Keeps heading and course list stacked vertically */
+.store {
+  margin-top: 8px;
+  border-radius: 6px;
+  padding: 8px 16px;
+  min-width: 110px;
+  background-color: var(--primary-accent);
+  border: none;
+  color: var(--text-main);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-.computer h1, 
-.computer h4 {
-    margin: 0; /* Removes default spacing for clean alignment */
-    color: #ffffff;  
-             
+.store:hover {
+  background-color: #0056b3;
+  transform: translateY(-1px);
 }
-/* Overall Footer Styling */
+
+/* Site Footer */
 .site-footer {
-  background-color: #060c18; /* Dark navy matching navbar */
-  color: #cbd5e1;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #060c18;
+  color: var(--text-sub);
   padding-top: 40px;
-  border-top: 1px solid #1e293b;
-  margin-top: auto;          /* Keeps footer at the bottom even with little content */
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
 }
 
-/* 4-Column Grid Layout */
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px 40px 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive columns */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 30px;
 }
 
-/* Column Headings */
 .footer-col h4 {
-  color: #ffffff;
+  color: var(--text-main);
   font-size: 1.1rem;
   margin-bottom: 16px;
   position: relative;
@@ -281,11 +281,10 @@ body::before {
   display: block;
   width: 30px;
   height: 2px;
-  background-color: #007bff; /* Blue accent underline */
+  background-color: var(--primary-accent);
   margin-top: 6px;
 }
 
-/* Brand Column Details */
 .footer-brand {
   display: flex;
   align-items: center;
@@ -299,17 +298,16 @@ body::before {
 }
 
 .footer-brand h3 {
-  color: #ffffff;
+  color: var(--text-main);
   margin: 0;
 }
 
 .slogan {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   line-height: 1.4;
 }
 
-/* Lists Styling */
 .contact-info, .footer-links {
   list-style: none;
   padding: 0;
@@ -327,17 +325,16 @@ body::before {
 }
 
 .footer-links a {
-  color: #cbd5e1;
+  color: var(--text-sub);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: #38bdf8; /* Accent light blue on hover */
+  color: var(--hover-accent);
 }
 
-/* Bottom Bar Copyright */
 .footer-bottom {
   background-color: #030712;
   text-align: center;
@@ -345,4 +342,56 @@ body::before {
   font-size: 0.8rem;
   color: #64748b;
   border-top: 1px solid #0f172a;
+}
+
+/* ==========================================
+   Mobile & Tablet Responsive Adjustments
+   ========================================== */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 15px 20px;
+    gap: 12px;
+  }
+
+  .nav-links {
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .electronics, .Courses {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .electronics-text, .computer {
+    align-items: center;
+  }
+
+  .Courses img {
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+  }
+
+  .search-box {
+    position: static;
+    transform: none;
+    margin-right: 0;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .middle {
+    padding: 15px 10px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }

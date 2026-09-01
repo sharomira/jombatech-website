@@ -1,78 +1,77 @@
 body{
     background-color: #1e293b;
 }
+
 .description{
     background-color: #007bff;
     color: #ffffff;
     text-align: center;
 }
+
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #0b1426; /* Deep navy background */
-  padding: 12px 40px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0b1426; /* Deep navy background */
+    padding: 12px 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 /* Brand & Logo styling */
 .nav-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
-.brand-name {
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 1.3rem;
-  letter-spacing: 1px;
-}
-/* Center the navbar content & space elements horizontally */
 
+.brand-name {
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+}
 
 /* Space out individual navigation links */
 .nav-links {
-       display: flex;
+    display: flex;
     justify-content: center;   /* Centers all nav groups together in the bar */
     align-items: center;       /* Vertically aligns items */
-    gap: 40px;                 /* Adds space between brand, links, and actions */
+    gap: 28px;                 /* Adjust this number to increase/decrease link spacing */
     padding: 12px 20px;
     background-color: #0b1426;
-    display: flex;
-    align-items: center;
-    gap: 28px;                 /* Adjust this number to increase/decrease link spacing */
 }
+
 /* Active Navigation Link Indicator */
 .nav-links a {
-  color: #cbd5e1;
-  text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  transition: color 0.2s ease-in-out;
- 
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
 }
 
 .nav-links a:hover {
-  color: #38bdf8; /* Accent light blue on hover */
+    color: #38bdf8; /* Accent light blue on hover */
 }
 
 .header-image{
-       display: flex;
+    display: flex;
     justify-content: center;   /* Centers all nav groups together in the bar */
     align-items: center;       /* Vertically aligns items */
     gap: 40px; 
-
 }
+
 .header-image img{
-   width: 100%;
-   display: block;
+    width: 100%;
+    display: block;
     mask-image: radial-gradient(
         ellipse at center,
         black 40%,
         transparent 80%
     );
 }
+
 /* Page Header */
 .page-header {
     text-align: center;
@@ -108,36 +107,43 @@ body{
     border: none;
     cursor: pointer;
     height: 20px;
-    
 }
+
+.table-container{
+    border-radius: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+}
+
 table{
-    width: 500px;
+    width: 100%;
+    min-width: 320px;
     border-collapse: separate;
     box-shadow: aqua;
-    
 }
-.table-container{
-    border-radius: 50px;
-    overflow: hidden;
-    width: 70%;
-}
+
 th,td{
     border: 1px solid #ccc;
-    padding: 5px;
+    padding: 8px;
     text-align: left;
-    
 }
+
 th{
     background-color: aqua;
     color: rgb(36, 33, 33);
 }
+
 td{
     background-color: #007bff;
     color: whitesmoke;
 }
+
 .enroll:hover{
     background-color: #007bff;
 }
+
 .course-card {
     background: rgba(11, 20, 38, 0.85);
     border: 1px solid #1e293b;
@@ -226,7 +232,7 @@ td{
 
 .enroll-btn {
     display: inline-block;
-    background-color: rgb(17, 67, 175); /* WhatsApp Green */
+    background-color: rgb(17, 67, 175);
     color: #ffffff;
     padding: 12px 20px;
     border-radius: 5px;
@@ -239,101 +245,164 @@ td{
 .enroll-btn:hover {
     background-color: #1eb954;
 }
+
 /* Overall Footer Styling */
 .site-footer {
-  background-color: #060c18; /* Dark navy matching navbar */
-  color: #cbd5e1;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding-top: 40px;
-  border-top: 1px solid #1e293b;
-  margin-top: auto;          /* Keeps footer at the bottom even with little content */
+    background-color: #060c18; /* Dark navy matching navbar */
+    color: #cbd5e1;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 40px;
+    border-top: 1px solid #1e293b;
+    margin-top: auto;          /* Keeps footer at the bottom even with little content */
 }
 
 /* 4-Column Grid Layout */
 .footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px 40px 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive columns */
-  gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive columns */
+    gap: 30px;
 }
 
 /* Column Headings */
 .footer-col h4 {
-  color: #ffffff;
-  font-size: 1.1rem;
-  margin-bottom: 16px;
-  position: relative;
+    color: #ffffff;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    position: relative;
 }
 
 .footer-col h4::after {
-  content: '';
-  display: block;
-  width: 30px;
-  height: 2px;
-  background-color: #007bff; /* Blue accent underline */
-  margin-top: 6px;
+    content: '';
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: #007bff; /* Blue accent underline */
+    margin-top: 6px;
 }
 
 /* Brand Column Details */
 .footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
 }
 
 .footer-logo {
-  height: 35px;
-  width: auto;
+    height: 35px;
+    width: auto;
 }
 
 .footer-brand h3 {
-  color: #ffffff;
-  margin: 0;
+    color: #ffffff;
+    margin: 0;
 }
 
 .slogan {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  line-height: 1.4;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.4;
 }
 
 /* Lists Styling */
 .contact-info, .footer-links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .contact-info li, .footer-col p {
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  line-height: 1.5;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
 }
 
 .footer-links li {
-  margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 .footer-links a {
-  color: #cbd5e1;
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.2s ease;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
 }
 
 .footer-links a:hover {
-  color: #38bdf8; /* Accent light blue on hover */
+    color: #38bdf8; /* Accent light blue on hover */
 }
 
 /* Bottom Bar Copyright */
 .footer-bottom {
-  background-color: #030712;
-  text-align: center;
-  padding: 15px 20px;
-  font-size: 0.8rem;
-  color: #64748b;
-  border-top: 1px solid #0f172a;
+    background-color: #030712;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 0.8rem;
+    color: #64748b;
+    border-top: 1px solid #0f172a;
+}
+
+/* ==========================================
+   Mobile & Tablet Responsiveness Media Queries
+   ========================================== */
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 12px 15px;
+        gap: 12px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        padding: 6px 0;
+    }
+
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .courses-grid {
+        grid-template-columns: 1fr;
+        padding: 20px 15px;
+    }
+
+    .enrollment-section {
+        flex-direction: column;
+        padding: 0 15px;
+    }
+
+    .footer-container {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header p {
+        font-size: 0.9rem;
+    }
+
+    .course-card,
+    .schedule-box, 
+    .enrollment-box {
+        padding: 16px;
+    }
+
+    .enroll-btn {
+        display: block;
+        text-align: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        padding: 0 15px 30px 15px;
+    }
 }
