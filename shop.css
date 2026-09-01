@@ -51,6 +51,7 @@ body {
   box-shadow: 0 0 12px rgba(46, 224, 223, 0.4), inset 0 0 6px rgba(46, 224, 223, 0.2);
   white-space: nowrap;
 width: 100px;
+padding-right: 10px;
 }
 
 .nav-links {
