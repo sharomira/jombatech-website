@@ -69,12 +69,21 @@ function renderProducts(productsToDisplay) {
     renderProducts(filteredProducts);
   }
 
-  // 1. Fetch JSON Products Data
-  fetch('/api/products')
-    .then(response => {
-      if (!response.ok) throw new Error('Could not load products.json');
-      return response.json();
-    })
+ // FIXED CODE in electronics-shop.html:
+fetch('/api/products')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Database response failed');
+    }
+    return response.json();
+  })
+  .then(products => {
+    // Keep your existing code here that populates the product grid!
+    renderProducts(products); 
+  })
+  .catch(error => {
+    console.error('Error loading products:', error);
+  })
     .then(data => {
       allProducts = data;
 
