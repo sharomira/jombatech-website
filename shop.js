@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const matchesCategory = (currentCategory === 'all') || 
                         (product.category.toLowerCase() === currentCategory) ||
                         (currentCategory === 'phones' && product.category.toLowerCase() === 'smartphones');
-                        
+
       // 2. Search check (title, brand, category)
       const searchableContent = `${product.title} ${product.brand || ''} ${product.category}`.toLowerCase();
       const matchesSearch = query === '' || searchableContent.includes(query);
