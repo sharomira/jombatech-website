@@ -55,9 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const filteredProducts = allProducts.filter(product => {
       // 1. Category check
-      const matchesCategory = (currentCategory === 'all') || 
-                              (product.category.toLowerCase() === currentCategory);
-
+      // Updated applyFilters function snippet in shop.js:
+const matchesCategory = (currentCategory === 'all') || 
+                        (product.category.toLowerCase() === currentCategory) ||
+                        (currentCategory === 'phones' && product.category.toLowerCase() === 'smartphones');
+                        
       // 2. Search check (title, brand, category)
       const searchableContent = `${product.title} ${product.brand || ''} ${product.category}`.toLowerCase();
       const matchesSearch = query === '' || searchableContent.includes(query);
