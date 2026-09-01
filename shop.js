@@ -49,26 +49,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Filter products by category and search query
   function applyFilters() {
-    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+  const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
 
-    const filteredProducts = allProducts.filter(product => {
-      // 1. Category check
-      // Updated applyFilters function snippet in shop.js:
-const matchesCategory = (currentCategory === 'all') || 
-                        (product.category.toLowerCase() === currentCategory) ||
-                        (currentCategory === 'phones' && product.category.toLowerCase() === 'smartphones');
+  const filteredProducts = allProducts.filter(product => {
+    // Clean up database values
+    const prodCategory = (product.category || '').toLowerCase().trim();
+    const targetCategory = currentCategory.toLowerCase().trim();
 
-      // 2. Search check (title, brand, category)
-      const searchableContent = `${product.title} ${product.brand || ''} ${product.category}`.toLowerCase();
-      const matchesSearch = query === '' || searchableContent.includes(query);
+    // 1. Flexible Category Check for ALL products
+    let matchesCategory = false;
 
-      return matchesCategory && matchesSearch;
-    });
+    if (targetCategory === 'all') {
+      matchesCategory = true;
+    } 
+    // Handle Smartphones / Phones
+    else if (targetCategory === 'smartphones' || targetCategory === 'phones') {
+      matchesCategory = prodCategory.includes('phone') || prodCategory.includes('smart');
+    } 
+    // Handle Laptops
+    else if (targetCategory === 'laptops') {
+      matchesCategory = prodCategory.includes('laptop') || prodCategory.includes('computer');
+    } 
+    // Handle Accessories
+    else if (targetCategory === 'accessories') {
+      matchesCategory = prodCategory.includes('accessor');
+    } 
+    // Handle Repairs & Parts
+    else if (targetCategory === 'repairs') {
+      matchesCategory = prodCategory.includes('repair') || prodCategory.includes('part');
+    } 
+    // Direct Fallback Match
+    else {
+      matchesCategory = prodCategory === targetCategory;
+    }
 
-    renderProducts(filteredProducts);
-  }
+    // 2. Search check (title, brand, category)
+    const searchableContent = `${product.title} ${product.brand || ''} ${prodCategory}`.toLowerCase();
+    const matchesSearch = query === '' || searchableContent.includes(query);
+
+    return matchesCategory && matchesSearch;
+  });
+
+  renderProducts(filteredProducts);
+}
 
   // Fetch products from Neon PostgreSQL backend API
   fetch('/api/products')
