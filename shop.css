@@ -238,14 +238,33 @@ body {
   box-shadow: 0 0 12px rgba(92, 225, 230, 0.4);
 }
 
-/* Product Grid Layout */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-  max-width: 1240px;
-  margin: 20px auto;
-  padding: 0 16px;
+/* Product Image Base Styling */
+.product-img {
+  width: 100%;
+  aspect-ratio: 16 / 10; /* Maintains consistent responsive proportion */
+  max-height: 200px;
+  object-fit: contain;  /* Shows the entire image without cropping edges */
+  background-color: #050b14; /* Dark backdrop matching page background for transparent photos */
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .product-img {
+    aspect-ratio: 4 / 3;
+    max-height: 180px; /* Constrains vertical height on phones so images don't dominate the card */
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .product-card {
