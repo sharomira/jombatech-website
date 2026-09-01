@@ -7,6 +7,7 @@
   --text-main: #ffffff;
   --text-muted: #94a3b8;
   --text-sub: #cbd5e1;
+  --glow-cyan: #2ee0df;
 }
 
 body {
@@ -53,18 +54,27 @@ body::before {
   box-sizing: border-box;
 }
 
-/* Navigation Bar */
+/* Navigation Container */
 .navbar {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   background-color: var(--bg-dark-navy);
-  padding: 12px clamp(12px, 3vw, 30px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Top Bar: Brand + Nav Links */
+.nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px clamp(12px, 3vw, 30px);
   gap: 12px;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -114,74 +124,105 @@ body::before {
   color: var(--hover-accent);
 }
 
-/* Dynamic Floating Pop-out Search Bar */
 .nav-actions {
-  position: relative;
   display: flex;
   align-items: center;
-}
-
-.icon-btn {
-  background: none;
-  border: none;
-  color: var(--text-main);
-  font-size: 1.15rem;
-  cursor: pointer;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  transition: transform 0.2s ease;
-}
-
-.icon-btn:hover {
-  transform: scale(1.1);
 }
 
 .search-checkbox {
   display: none;
 }
 
-/* Floating Popout Box */
-.search-popout {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  background: rgba(9, 21, 39, 0.95);
-  border: 1px solid #2ee0df;
-  padding: 8px 12px;
+/* Search Icon Toggle Button */
+.icon-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 10px rgba(46, 224, 223, 0.2);
-  backdrop-filter: blur(8px);
-  
-  /* Initial hidden popped state */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: var(--glow-cyan);
+  color: var(--hover-accent);
+}
+
+/* Full-Width Search Row directly below Nav */
+.search-bar-row {
+  max-height: 0;
   opacity: 0;
-  visibility: hidden;
-  transform: scale(0.85) translateY(-10px);
-  transform-origin: top right;
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 150;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.35s ease;
+  background-color: #07101f;
+  padding: 0 clamp(12px, 3vw, 30px);
+}
+
+/* Active drop-down state */
+.search-checkbox:checked ~ * .search-bar-row,
+.search-checkbox:checked ~ .search-bar-row {
+  max-height: 80px;
+  opacity: 1;
+  padding: 10px clamp(12px, 3vw, 30px) 14px;
+  border-top: 1px solid rgba(46, 224, 223, 0.2);
+}
+
+/* Premium Search Input Box Styling */
+.search-input-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid var(--glow-cyan);
+  border-radius: 25px;
+  padding: 4px 6px 4px 14px;
+  box-shadow: 0 0 12px rgba(46, 224, 223, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.search-icon-inside {
+  font-size: 0.95rem;
+  color: var(--glow-cyan);
+  margin-right: 10px;
 }
 
 .search-input {
+  flex: 1;
   background: transparent;
   border: none;
   color: var(--text-main);
+  font-size: clamp(0.85rem, 1.8vw, 0.95rem);
   outline: none;
-  font-size: 0.85rem;
-  width: 210px;
+  padding: 6px 0;
 }
 
 .search-input::placeholder {
   color: var(--text-muted);
 }
 
-/* Pop-out Triggered State */
-.search-checkbox:checked ~ .search-popout {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1) translateY(0);
+.search-submit-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border: none;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 7px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.2s ease;
+}
+
+.search-submit-btn:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
 }
 
 /* Main Dashboard Container */
@@ -369,7 +410,7 @@ body::before {
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
-  .navbar {
+  .nav-top {
     flex-direction: column;
     padding: 10px 12px;
     gap: 8px;
@@ -377,21 +418,12 @@ body::before {
 
   .nav-controls {
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
   }
 
-  .search-popout {
-    right: 50%;
-    transform-origin: top center;
-    transform: scale(0.85) translateX(50%) translateY(-10px);
-  }
-
-  .search-checkbox:checked ~ .search-popout {
-    transform: scale(1) translateX(50%) translateY(0);
-  }
-
-  .search-input {
-    width: 180px;
+  .search-submit-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 
   .card {

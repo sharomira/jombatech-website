@@ -10,27 +10,33 @@
   <div class="description">Jombatech Shop & Learn</div>
   
   <header class="navbar">
-    <div class="nav-brand">
-      <img src="logo.jpg" alt="Jomba Tech Logo" class="logo">
-      <span class="brand-name">JOMBATECH</span>
-    </div>
-  
-    <div class="nav-controls">
-      <nav class="nav-links">
-        <a href="shop.html">ELECTRONICS SHOP</a>
-        <a href="computer class.html">COMPUTER CLASSES</a>
-        <a href="#schedules">REPAIR CLASSES</a>
-      </nav>
+    <!-- Top Row: Brand & Navigation -->
+    <div class="nav-top">
+      <div class="nav-brand">
+        <img src="logo.jpg" alt="Jomba Tech Logo" class="logo">
+        <span class="brand-name">JOMBATECH</span>
+      </div>
+    
+      <div class="nav-controls">
+        <nav class="nav-links">
+          <a href="shop.html">ELECTRONICS SHOP</a>
+          <a href="computer class.html">COMPUTER CLASSES</a>
+          <a href="#schedules">REPAIR CLASSES</a>
+        </nav>
 
-      <div class="nav-actions">
-        <input type="checkbox" id="search-toggle" class="search-checkbox">
-
-        <label for="search-toggle" id="home-search-icon-btn" class="icon-btn" aria-label="Search">🔍</label>
-
-        <!-- Floating Pop-out Search Container -->
-        <div class="search-popout">
-          <input type="text" id="home-search-input" placeholder="Search smartphones, laptops..." class="search-input">
+        <div class="nav-actions">
+          <input type="checkbox" id="search-toggle" class="search-checkbox">
+          <label for="search-toggle" id="home-search-icon-btn" class="icon-btn" aria-label="Toggle Search">🔍 Search</label>
         </div>
+      </div>
+    </div>
+
+    <!-- Full-Width Dropdown Search Bar directly below Nav -->
+    <div class="search-bar-row">
+      <div class="search-input-wrapper">
+        <span class="search-icon-inside">🔍</span>
+        <input type="text" id="home-search-input" placeholder="Search smartphones, laptops, computer courses, repairs..." class="search-input">
+        <button type="button" class="search-submit-btn">Search</button>
       </div>
     </div>
   </header>
