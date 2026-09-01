@@ -28,26 +28,29 @@
   <!-- Add Product Form -->
   <div class="card-form">
     <h3>Add New Product</h3>
-    <form action="/admin/add-product" method="POST">
-      <label>Title:</label>
-      <input type="text" name="title" placeholder="e.g. HP EliteBook 840 G3" required>
+    <form action="/admin/add" method="POST">
+  <div>
+    <label for="title">Product Title:</label>
+    <input type="text" id="title" name="title" required />
+  </div>
 
-      <label>Category:</label>
-      <select name="category" required>
-        <option value="smartphones">Smartphones</option>
-        <option value="laptops">Laptops</option>
-        <option value="accessories">Accessories</option>
-        <option value="repairs">Repairs & Parts</option>
-      </select>
+  <div>
+    <label for="category">Category:</label>
+    <input type="text" id="category" name="category" required />
+  </div>
 
-      <label>Price:</label>
-      <input type="text" name="price" placeholder="e.g. KSh 32,000" required>
+  <div>
+    <label for="price">Price:</label>
+    <input type="text" id="price" name="price" required />
+  </div>
 
-      <label>Image Filename or URL:</label>
-      <input type="text" name="image" placeholder="e.g. laptop.jpg" required>
+  <div>
+    <label for="image">Image URL:</label>
+    <input type="text" id="image" name="image" required />
+  </div>
 
-      <button type="submit">Save Product</button>
-    </form>
+  <button type="submit">Add Product</button>
+</form>
   </div>
 
   <!-- Product Inventory Table -->

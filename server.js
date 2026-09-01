@@ -47,6 +47,29 @@ app.get('/api/products', (req, res) => {
   });
 });
 
+// POST Route: Add a new product to Neon PostgreSQL from admin.ejs
+app.post('/admin/add', (req, res) => {
+  const { title, category, price, image } = req.body;
+
+  // Basic validation to ensure required fields aren't empty
+  if (!title || !category || !price || !image) {
+    console.error('Missing form fields');
+    return res.redirect('/admin');
+  }
+
+  const query = `INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)`;
+  
+  db.run(query, [title, category, price, image], (err) => {
+    if (err) {
+      console.error('Error inserting product into database:', err.message);
+      return res.status(500).send('Database insertion error');
+    }
+    
+    console.log('Product added successfully!');
+    // Redirect back to the admin page to display the updated product list
+    res.redirect('/admin');
+  });
+});
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
