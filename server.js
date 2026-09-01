@@ -21,6 +21,17 @@ app.get('/', (req, res) => {
   });
 });
 
+// API Route for Frontend Shop (Fixes 404 Not Found error)
+app.get('/api/products', (req, res) => {
+  db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
+    if (err) {
+      console.error('API Error fetching products:', err.message);
+      return res.status(500).json({ error: 'Failed to retrieve products from database' });
+    }
+    res.json(products || []);
+  });
+});
+
 // Admin dashboard view
 app.get('/admin', (req, res) => {
   db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {

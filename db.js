@@ -20,20 +20,25 @@ const createTableQuery = `
   );
 `;
 
+// Initialize Table without dumping raw socket objects
 pool.query(createTableQuery)
   .then(() => console.log('Connected to Neon PostgreSQL Database!'))
-  .catch((err) => console.error('Database setup error:', err.stack));
+  .catch((err) => console.error('Database setup error:', err.message));
 
 module.exports = {
   all: (text, params, callback) => {
-    pool.query(text, params, (err, res) => {
+    // Convert SQLite style ? placeholders to PostgreSQL $1, $2, etc.
+    let paramIndex = 1;
+    const pgText = typeof text === 'string' ? text.replace(/\?/g, () => `$${paramIndex++}`) : text;
+
+    pool.query(pgText, params, (err, res) => {
       if (err) return callback(err, null);
       callback(null, res.rows);
     });
   },
   run: (text, params, callback) => {
     let paramIndex = 1;
-    const pgText = text.replace(/\?/g, () => `$${paramIndex++}`);
+    const pgText = typeof text === 'string' ? text.replace(/\?/g, () => `$${paramIndex++}`) : text;
     
     pool.query(pgText, params, (err, res) => {
       if (err) return callback(err);
