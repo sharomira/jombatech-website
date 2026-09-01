@@ -64,12 +64,14 @@ body::before {
   position: sticky;
   top: 0;
   z-index: 100;
+  gap: 16px;
 }
 
 .nav-brand {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -85,17 +87,25 @@ body::before {
   letter-spacing: 1px;
 }
 
+/* Nav Controls (Links + Search together on same line) */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 28px);
+}
+
 .nav-links {
   display: flex;
-  gap: clamp(12px, 2.5vw, 28px);
+  gap: clamp(10px, 2vw, 24px);
   align-items: center;
 }
 
 .nav-links a {
   color: var(--text-sub);
   text-decoration: none;
-  font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+  font-size: clamp(0.75rem, 1.6vw, 0.95rem);
   font-weight: 500;
+  white-space: nowrap;
   transition: color 0.2s ease-in-out;
 }
 
@@ -103,11 +113,12 @@ body::before {
   color: var(--hover-accent);
 }
 
+/* Inline Search Actions */
 .nav-actions {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 8px;
+  position: relative;
 }
 
 .icon-btn {
@@ -117,6 +128,9 @@ body::before {
   font-size: 1.1rem;
   cursor: pointer;
   padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: opacity 0.2s;
 }
 
@@ -130,26 +144,22 @@ body::before {
 
 .search-box {
   display: none;
-  position: absolute;
-  right: 100%;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-right: 10px;
 }
 
 .search-input {
   background: #091527;
   border: 1px solid #2ee0df;
   color: var(--text-main);
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 15px;
   outline: none;
-  font-size: 0.85rem;
-  width: 180px;
+  font-size: 0.82rem;
+  width: clamp(130px, 15vw, 200px);
 }
 
 .search-checkbox:checked ~ .search-box {
-  display: block;
+  display: flex;
+  align-items: center;
 }
 
 /* Main Dashboard Container */
@@ -342,14 +352,15 @@ body::before {
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    padding: 14px 16px;
-    gap: 12px;
+    padding: 12px 16px;
+    gap: 10px;
   }
 
-  .nav-links {
-    gap: 14px;
-    flex-wrap: wrap;
+  .nav-controls {
+    width: 100%;
     justify-content: center;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
 
   .card {
@@ -367,16 +378,13 @@ body::before {
   .card-content {
     align-items: center;
   }
-
-  .search-box {
-    position: static;
-    transform: none;
-    margin-right: 0;
-    margin-top: 8px;
-  }
 }
 
 @media (max-width: 480px) {
+  .nav-links a {
+    font-size: 0.72rem;
+  }
+
   .product-grid {
     grid-template-columns: 1fr;
     gap: 16px;
