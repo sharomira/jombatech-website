@@ -134,6 +134,74 @@ body::before {
   transition: opacity 0.2s;
 }
 
+/* Search dropdown */
+.search-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    
+    width: 300px;
+    padding: 12px;
+
+    background: var(--bg-main, #fff);
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+    gap: 8px;
+
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+
+    transition: all 0.2s ease;
+
+    z-index: 1000;
+}
+
+/* Show search bar when icon is clicked */
+#search-toggle:checked ~ .search-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Search input */
+.search-dropdown input {
+    flex: 1;
+    padding: 10px 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    outline: none;
+    font-size: 14px;
+}
+
+/* Search input focus */
+.search-dropdown input:focus {
+    border-color: #007bff;
+}
+
+/* Search button */
+.search-dropdown button {
+    padding: 10px 14px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #007bff;
+    color: white;
+
+    cursor: pointer;
+}
+
+.search-dropdown button:hover {
+    opacity: 0.9;
+}
 .icon-btn:hover {
   opacity: 0.8;
 }

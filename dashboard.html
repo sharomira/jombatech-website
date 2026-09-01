@@ -23,18 +23,22 @@
         <a href="#schedules">REPAIR CLASSES</a>
       </nav>
 
-      <div class="nav-actions">
-        <!-- Hidden Checkbox Toggle -->
-        <input type="checkbox" id="search-toggle" class="search-checkbox">
+      <!-- Hidden toggle -->
+<input type="checkbox" id="search-toggle" hidden>
 
-        <!-- Search Icon acting as the button -->
-        <label for="search-toggle" id="home-search-icon-btn" class="icon-btn" aria-label="Search">🔍</label>
+<!-- Search Icon -->
+<label for="search-toggle"
+       id="home-search-icon-btn"
+       class="icon-btn"
+       aria-label="Search">
+    🔍
+</label>
 
-        <!-- Expandable Search Input -->
-        <div class="search-box">
-          <input type="text" id="home-search-input" placeholder="Search smartphones, laptops..." class="search-input">
-        </div>
-      </div>
+<!-- Dropdown Search Bar -->
+<div class="search-dropdown">
+    <input type="text" placeholder="Search..." id="search-input">
+    <button type="button">Search</button>
+</div>
     </div>
   </header>
 
