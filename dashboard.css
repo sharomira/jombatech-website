@@ -22,7 +22,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background image overlay with controlled opacity */
+/* Background image overlay */
 body::before {
   content: "";
   position: fixed;
@@ -87,11 +87,12 @@ body::before {
   letter-spacing: 1px;
 }
 
-/* Nav Controls (Links + Search together on same line) */
+/* Nav Controls */
 .nav-controls {
   display: flex;
   align-items: center;
   gap: clamp(12px, 2.5vw, 28px);
+  position: relative;
 }
 
 .nav-links {
@@ -113,14 +114,7 @@ body::before {
   color: var(--hover-accent);
 }
 
-/* Inline Search Actions */
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-}
-
+/* Search Icon Toggle */
 .icon-btn {
   background: none;
   border: none;
@@ -132,102 +126,70 @@ body::before {
   align-items: center;
   justify-content: center;
   transition: opacity 0.2s;
+  user-select: none;
 }
 
-/* Search dropdown */
-.search-dropdown {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    
-    width: 300px;
-    padding: 12px;
-
-    background: var(--bg-main, #fff);
-    border: 1px solid #ddd;
-    border-radius: 10px;
-
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-
-    display: flex;
-    gap: 8px;
-
-    /* Hidden by default */
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-
-    transition: all 0.2s ease;
-
-    z-index: 1000;
-}
-
-/* Show search bar when icon is clicked */
-#search-toggle:checked ~ .search-dropdown {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-/* Search input */
-.search-dropdown input {
-    flex: 1;
-    padding: 10px 12px;
-
-    border: 1px solid #ccc;
-    border-radius: 6px;
-
-    outline: none;
-    font-size: 14px;
-}
-
-/* Search input focus */
-.search-dropdown input:focus {
-    border-color: #007bff;
-}
-
-/* Search button */
-.search-dropdown button {
-    padding: 10px 14px;
-
-    border: none;
-    border-radius: 6px;
-
-    background: #007bff;
-    color: white;
-
-    cursor: pointer;
-}
-
-.search-dropdown button:hover {
-    opacity: 0.9;
-}
 .icon-btn:hover {
   opacity: 0.8;
 }
 
-.search-checkbox {
-  display: none;
-}
-
-.search-box {
-  display: none;
-}
-
-.search-input {
+/* Search Dropdown Box */
+.search-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 280px;
+  padding: 10px;
   background: #091527;
-  border: 1px solid #2ee0df;
-  color: var(--text-main);
-  padding: 6px 12px;
-  border-radius: 15px;
-  outline: none;
-  font-size: 0.82rem;
-  width: clamp(130px, 15vw, 200px);
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  gap: 8px;
+  
+  /* Hidden state */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1000;
 }
 
-.search-checkbox:checked ~ .search-box {
-  display: flex;
-  align-items: center;
+/* Toggle functionality using sibling selector */
+#search-toggle:checked ~ .search-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.search-dropdown input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #050b14;
+  border: 1px solid #2ee0df;
+  border-radius: 6px;
+  color: var(--text-main);
+  outline: none;
+  font-size: 14px;
+}
+
+.search-dropdown input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-dropdown button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary-accent);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.search-dropdown button:hover {
+  opacity: 0.9;
 }
 
 /* Main Dashboard Container */
@@ -413,10 +375,7 @@ body::before {
   border-top: 1px solid #0f172a;
 }
 
-/* ==========================================
-   Mobile & Tablet Adaptations
-   ========================================== */
-
+/* Mobile & Tablet Adaptations */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
@@ -429,6 +388,15 @@ body::before {
     justify-content: center;
     flex-wrap: nowrap;
     gap: 10px;
+  }
+
+  .search-dropdown {
+    right: 50%;
+    transform: translate(50%, -8px);
+  }
+
+  #search-toggle:checked ~ .search-dropdown {
+    transform: translate(50%, 0);
   }
 
   .card {
