@@ -18,10 +18,13 @@ body {
 .description {
   background-color: #090977;
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: clamp(0.7rem, 2vw, 0.78rem);
   font-weight: 600;
   padding: 8px 12px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-pill {
@@ -37,32 +40,39 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 24px;
+  padding: 10px clamp(12px, 3vw, 24px);
   background-color: #060e1b;
   border-bottom: 1px solid #0f223d;
+  gap: 12px;
+}
+
+.nav-brand {
+  flex-shrink: 0;
 }
 
 .brand-name {
   padding: 6px 14px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
   color: #ffffff;
   text-decoration: none;
   border: 1.5px solid #2ee0df;
   border-radius: 25px;
   background: rgba(46, 224, 223, 0.1);
   box-shadow: 0 0 12px rgba(46, 224, 223, 0.4);
+  white-space: nowrap;
 }
 
 .nav-links {
   display: flex;
-  gap: 18px;
+  gap: clamp(10px, 2vw, 18px);
 }
 
 .nav-links a {
   color: #94a3b8;
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.88rem);
+  white-space: nowrap;
   transition: color 0.2s ease;
 }
 
@@ -76,7 +86,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 16px;
+  padding: clamp(20px, 5vw, 40px) 16px;
 }
 
 /* Registration Card - Cyan Accent */
@@ -86,26 +96,26 @@ body {
   border-radius: 14px;
   width: 100%;
   max-width: 480px;
-  padding: 32px;
+  padding: clamp(20px, 5vw, 32px);
   box-shadow: 0 0 25px rgba(46, 224, 223, 0.15);
 }
 
 .auth-header h2 {
   margin: 0 0 6px 0;
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   color: #ffffff;
 }
 
 .auth-header p {
   margin: 0 0 22px 0;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2vw, 0.85rem);
   color: #94a3b8;
   line-height: 1.5;
 }
 
 /* Form Controls */
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .form-group label {
@@ -118,7 +128,7 @@ body {
 
 .form-input {
   width: 100%;
-  padding: 11px 14px;
+  padding: 12px 14px;
   background: #050b14;
   border: 1px solid #142c4c;
   border-radius: 8px;
@@ -149,7 +159,7 @@ select.form-input option {
 
 .submit-btn {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background: #2ee0df;
   color: #050b14;
   border: none;
@@ -169,7 +179,7 @@ select.form-input option {
 
 .auth-footer {
   text-align: center;
-  margin-top: 22px;
+  margin-top: 20px;
   font-size: 0.85rem;
   color: #94a3b8;
 }
@@ -187,4 +197,17 @@ select.form-input option {
   text-align: center;
   color: #64748b;
   font-size: 0.8rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .nav-links {
+    overflow-x: auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
 }

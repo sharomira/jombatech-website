@@ -1,4 +1,4 @@
-/* Core Layout & Theme */
+/* Core Page Layout & Dark Theme Setup */
 * {
   box-sizing: border-box;
 }
@@ -14,93 +14,96 @@ body {
   flex-direction: column;
 }
 
-/* Announcement Header & Navbar */
+/* Header & Navbar */
 .description {
   background-color: #090977;
   color: #ffffff;
-  font-size: 0.78rem;
+  font-size: clamp(0.7rem, 2vw, 0.78rem);
   font-weight: 600;
   padding: 8px 12px;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-pill {
-  background: rgba(46, 224, 223, 0.2);
-  border: 1px solid #2ee0df;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid #3b82f6;
   padding: 2px 8px;
   border-radius: 12px;
   margin-right: 6px;
-  color: #2ee0df;
+  color: #60a5fa;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 24px;
+  padding: 10px clamp(12px, 3vw, 24px);
   background-color: #060e1b;
   border-bottom: 1px solid #0f223d;
+  gap: 12px;
 }
 
 .brand-name {
   padding: 6px 14px;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
   color: #ffffff;
   text-decoration: none;
-  border: 1.5px solid #2ee0df;
+  border: 1.5px solid #3b82f6;
   border-radius: 25px;
-  background: rgba(46, 224, 223, 0.1);
-  box-shadow: 0 0 12px rgba(46, 224, 223, 0.4);
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.3);
+  white-space: nowrap;
 }
 
 .nav-links {
   display: flex;
-  gap: 18px;
+  gap: clamp(10px, 2vw, 18px);
 }
 
 .nav-links a {
   color: #94a3b8;
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: clamp(0.75rem, 1.8vw, 0.88rem);
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
-  color: #2ee0df;
+  color: #60a5fa;
 }
 
-/* Auth Card Layout */
+/* Login Wrapper */
 .login-wrapper {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 16px;
+  padding: clamp(20px, 5vw, 40px) 16px;
 }
 
+/* Login Card - Blue Indigo Accent */
 .auth-card {
   background: #091527;
-  border: 1px solid #142c4c;
+  border: 1px solid #1d4ed8;
   border-radius: 12px;
   width: 100%;
-  max-width: 440px;
-  padding: 28px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-  transition: border-color 0.3s ease;
+  max-width: 420px;
+  padding: clamp(20px, 5vw, 30px);
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
 }
 
-.auth-card:hover {
-  border-color: #2ee0df;
-}
-
-/* Auth Tabs */
+/* Role Switcher Tabs */
 .auth-tabs {
   display: flex;
   background: #050b14;
   border-radius: 8px;
   padding: 4px;
-  margin-bottom: 24px;
-  border: 1px solid #142c4c;
+  margin-bottom: 20px;
+  border: 1px solid #1e3a8a;
 }
 
 .tab-btn {
@@ -108,29 +111,29 @@ body {
   background: transparent;
   border: none;
   color: #94a3b8;
-  padding: 10px;
-  font-size: 0.85rem;
+  padding: 10px 6px;
+  font-size: clamp(0.78rem, 2vw, 0.85rem);
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
-  background: #2ee0df;
-  color: #050b14;
+  background: #3b82f6;
+  color: #ffffff;
 }
 
-/* Auth Header */
 .auth-header h2 {
   margin: 0 0 6px 0;
-  font-size: 1.4rem;
+  font-size: clamp(1.25rem, 4vw, 1.4rem);
   color: #ffffff;
 }
 
 .auth-header p {
   margin: 0 0 20px 0;
-  font-size: 0.85rem;
+  font-size: clamp(0.8rem, 2vw, 0.85rem);
   color: #94a3b8;
 }
 
@@ -139,53 +142,49 @@ body {
   margin-bottom: 16px;
 }
 
-.form-group.hidden {
-  display: none;
-}
-
 .form-group label {
   display: block;
   font-size: 0.8rem;
-  color: #cbd5e1;
+  color: #93c5fd;
   margin-bottom: 6px;
   font-weight: 600;
 }
 
 .form-input {
   width: 100%;
-  padding: 10px 14px;
+  padding: 12px 14px;
   background: #050b14;
-  border: 1px solid #142c4c;
+  border: 1px solid #1e3a8a;
   border-radius: 6px;
   color: #ffffff;
   font-size: 0.9rem;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s;
 }
 
 .form-input:focus {
-  border-color: #2ee0df;
+  border-color: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
 }
 
 .submit-btn {
   width: 100%;
-  padding: 12px;
-  background: #2ee0df;
-  color: #050b14;
+  padding: 13px;
+  background: #3b82f6;
+  color: #ffffff;
   border: none;
   border-radius: 6px;
   font-weight: 700;
   font-size: 0.95rem;
   cursor: pointer;
   margin-top: 10px;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.2s;
 }
 
 .submit-btn:hover {
-  opacity: 0.9;
+  background-color: #2563eb;
 }
 
-/* Footer Link */
 .auth-footer {
   text-align: center;
   margin-top: 20px;
@@ -194,7 +193,7 @@ body {
 }
 
 .auth-footer a {
-  color: #2ee0df;
+  color: #60a5fa;
   text-decoration: none;
   font-weight: 600;
 }
@@ -206,4 +205,17 @@ body {
   text-align: center;
   color: #64748b;
   font-size: 0.8rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .nav-links {
+    overflow-x: auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
 }
