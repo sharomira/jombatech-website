@@ -32,8 +32,8 @@
     <div class="auth-card">
       
       <div class="auth-tabs">
-        <button class="tab-btn active" id="tab-student" onclick="switchRole('student')">Student Portal</button>
-        <button class="tab-btn" id="tab-admin" onclick="switchRole('admin')">Admin Portal</button>
+        <button class="tab-btn active" id="tab-student" type="button" onclick="switchRole('student')">Student Portal</button>
+        <button class="tab-btn" id="tab-admin" type="button" onclick="switchRole('admin')">Admin Portal</button>
       </div>
 
       <div class="auth-header">
@@ -41,16 +41,11 @@
         <p id="portal-subtitle">Access your enrolled courses and certificate records</p>
       </div>
 
-      <form id="auth-form" onsubmit="handleAuth(event)">
+      <form id="auth-form" onsubmit="handleLogin(event)">
         
-        <div class="form-group hidden" id="group-fullname">
-          <label for="fullname">Full Official Name (For Certificates)</label>
-          <input type="text" id="fullname" placeholder="e.g., John Mwangi" class="form-input">
-        </div>
-
         <div class="form-group">
-          <label for="email">Email or Phone Number</label>
-          <input type="text" id="email" required placeholder="student@jombatech.com" class="form-input">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="student@jombatech.com" class="form-input">
         </div>
 
         <div class="form-group">
@@ -59,13 +54,12 @@
         </div>
 
         <input type="hidden" id="user-role" value="student">
-        <input type="hidden" id="auth-mode" value="login">
 
         <button type="submit" class="submit-btn" id="submit-btn">Login to Portal</button>
       </form>
 
       <div class="auth-footer">
-        <p id="toggle-text">Don't have an account? <a href="register.html" onclick="toggleAuthMode(event)">Register Here</a></p>
+        <p>Don't have an account? <a href="register.html">Register Here</a></p>
       </div>
 
     </div>
