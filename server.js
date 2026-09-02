@@ -77,6 +77,37 @@ app.post('/admin/delete-product/:id', (req, res) => {
   });
 });
 
+
+// POST /api/reset-password
+app.post('/api/reset-password', async (req, res) => {
+  const { email, phone, newPassword } = req.body;
+
+  try {
+    // 1. Verify student exists with matching phone number
+    const userResult = await db.query(
+      'SELECT * FROM users WHERE LOWER(email) = $1 AND phone = $2',
+      [email.toLowerCase(), phone]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(400).json({ error: 'Email and phone number do not match records.' });
+    }
+
+    // 2. Hash new password for security
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // 3. Update password centrally in database
+    await db.query(
+      'UPDATE users SET password = $1 WHERE LOWER(email) = $2',
+      [hashedPassword, email.toLowerCase()]
+    );
+
+    res.json({ message: 'Password updated successfully across all devices!' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error during password update.' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
