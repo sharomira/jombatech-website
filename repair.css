@@ -168,7 +168,7 @@ body {
 
 /* Edge-Faded Hero Banner Image */
 .faded-banner-img {
-  width: 100%;
+  width: 60%;
   max-width: 900px; /* Adjust based on your preferred container size */
   height: 300px;
   display: block;
