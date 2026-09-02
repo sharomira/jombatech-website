@@ -8,6 +8,7 @@
 </head>
 <body>
 
+  <!-- Announcement Bar -->
   <div class="description">
     <span>
       <span class="brand-pill">JOMBATECH</span>
@@ -15,6 +16,7 @@
     </span>
   </div>
 
+  <!-- Navigation Header -->
   <header class="navbar">
     <div class="nav-brand">
       <a href="dashboard.html" class="brand-name">JOMBATECH</a>
@@ -28,19 +30,23 @@
     </nav>
   </header>
 
+  <!-- Login Card Container -->
   <main class="login-wrapper">
     <div class="auth-card">
       
+      <!-- Role Selector Tabs -->
       <div class="auth-tabs">
         <button class="tab-btn active" id="tab-student" type="button" onclick="switchRole('student')">Student Portal</button>
         <button class="tab-btn" id="tab-admin" type="button" onclick="switchRole('admin')">Admin Portal</button>
       </div>
 
+      <!-- Header Text -->
       <div class="auth-header">
         <h2 id="portal-title">Student Login</h2>
         <p id="portal-subtitle">Access your enrolled courses and certificate records</p>
       </div>
 
+      <!-- Authentication Form -->
       <form id="auth-form" onsubmit="handleLogin(event)">
         
         <div class="form-group">
@@ -49,21 +55,19 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" required placeholder="••••••••" class="form-input">
-        </div>
-        <div class="form-group">
-         
-          <input type="password" id="password" required placeholder="••••••••" class="form-input">
-        </div>
-        <input type="hidden" id="user-role" value="student">
- <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <label for="password" style="margin-bottom: 0;">Password</label>
             <a href="forgot-password.html" style="color: #60a5fa; font-size: 0.78rem; text-decoration: none; font-weight: 600;">Forgot Password?</a>
           </div>
+          <input type="password" id="password" required placeholder="••••••••" class="form-input">
+        </div>
+
+        <input type="hidden" id="user-role" value="student">
+
         <button type="submit" class="submit-btn" id="submit-btn">Login to Portal</button>
       </form>
 
+      <!-- Registration Redirect -->
       <div class="auth-footer">
         <p>Don't have an account? <a href="register.html">Register Here</a></p>
       </div>
@@ -71,6 +75,7 @@
     </div>
   </main>
 
+  <!-- Site Footer -->
   <footer class="site-footer">
     <div class="footer-bottom">
       <p>&copy; 2026 JombaTech Institute. All rights reserved.</p>
