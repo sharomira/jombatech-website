@@ -166,6 +166,34 @@ body {
   cursor: pointer;
 }
 
+/* Edge-Faded Hero Banner Image */
+.faded-banner-img {
+  width: 100%;
+  max-width: 900px; /* Adjust based on your preferred container size */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  
+  /* Creates transparent fade-out on the left and right edges */
+  -webkit-mask-image: linear-gradient(
+    to right, 
+    transparent 0%, 
+    black 12%, 
+    black 88%, 
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right, 
+    transparent 0%, 
+    black 12%, 
+    black 88%, 
+    transparent 100%
+  );
+  
+  /* Optional: Adds a dark ambient glow around the banner */
+  box-shadow: 0 0 30px rgba(5, 11, 20, 0.9);
+}
 /* Page Container Layout */
 .page-container {
   max-width: 1100px;
