@@ -170,7 +170,7 @@ body {
 .faded-banner-img {
   width: 100%;
   max-width: 900px; /* Adjust based on your preferred container size */
-  height: auto;
+  height: 300px;
   display: block;
   margin: 0 auto;
   border-radius: 12px;
