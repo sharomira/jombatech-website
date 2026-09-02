@@ -166,11 +166,15 @@ body {
   cursor: pointer;
 }
 
+.banner-wrapper{
+    height: 200px;
+    width: 300px;
+}
 /* Edge-Faded Hero Banner Image */
 .faded-banner-img {
-  width: 60%;
+  width: 100%;
   max-width: 900px; /* Adjust based on your preferred container size */
-  height: 300px;
+  
   display: block;
   margin: 0 auto;
   border-radius: 12px;
