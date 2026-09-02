@@ -209,7 +209,7 @@ body {
 
 @media (max-width: 480px) {
   .faded-banner-img {
-    height: 140px;
+    height: 160px;
     
     /* Soften the side mask on small screens so main content isn't cut off */
     -webkit-mask-image: linear-gradient(
