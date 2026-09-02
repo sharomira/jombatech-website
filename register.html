@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Student Account | Jomba Tech Institute</title>
+  <link rel="stylesheet" href="register.css">
+</head>
+<body>
+
+  <div class="description">
+    <span>
+      <span class="brand-pill">JOMBATECH</span>
+      STUDENT REGISTRATION
+    </span>
+  </div>
+
+  <header class="navbar">
+    <div class="nav-brand">
+      <a href="dashboard.html" class="brand-name">JOMBATECH</a>
+    </div>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Home</a>
+      <a href="computer class.html">Computer Class</a>
+      <a href="repair.html">Repair Class</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+  </header>
+
+  <main class="login-wrapper">
+    <div class="auth-card">
+      
+      <div class="auth-header">
+        <h2>Create Student Account</h2>
+        <p>Enter your details accurately for course enrollment and official certificate generation.</p>
+      </div>
+
+      <form id="register-form" onsubmit="handleRegistration(event)">
+        
+        <div class="form-group">
+          <label for="full-name">Full Official Name (Printed on Certificate)</label>
+          <input type="text" id="full-name" required placeholder="e.g., John Mwangi Kamau" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required placeholder="student@jombatech.com" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number (WhatsApp)</label>
+          <input type="tel" id="phone" required placeholder="e.g., 0712345678" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="course">Select Primary Enrolled Course</label>
+          <select id="course" required class="form-input">
+            <option value="" disabled selected>-- Choose Course --</option>
+            <option value="Computer Packages Masterclass">Computer Packages Masterclass</option>
+            <option value="Electronics & Hardware Repair">Electronics & Hardware Repair</option>
+            <option value="Both Courses">Both Computer & Repair Classes</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Create Password</label>
+          <input type="password" id="password" required placeholder="••••••••" class="form-input" minlength="6">
+        </div>
+
+        <button type="submit" class="submit-btn">Register Account</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="login.html">Login Here</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 JombaTech Institute. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="register.js"></script>
+</body>
+</html>
