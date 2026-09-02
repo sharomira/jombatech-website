@@ -1,37 +1,209 @@
-body{
-    background-color: rgb(10, 10, 66);
+/* Core Layout & Theme */
+* {
+  box-sizing: border-box;
 }
-.login{
-    color: whitesmoke;
 
-   margin-top: 300px;
-   margin-left: 500px;
-   width: 400px;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #050b14;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
+/* Announcement Header & Navbar */
+.description {
+  background-color: #090977;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: center;
 }
-.attributes{
-    
-     display: inline-block;
-    text-align: center;
-    background: transparent;
-    color: #ffffff;
-    font-weight: bold;
-    padding: 10px 14px;
-    border-radius: 6px;
-    text-decoration: none;
-    margin-top: auto;
-    box-shadow: 0 0 10px rgba(247, 246, 248, 0.856);
-   box-sizing: border-box;
-   font-size: 15px;
-   font-family: sans-serif;
+
+.brand-pill {
+  background: rgba(46, 224, 223, 0.2);
+  border: 1px solid #2ee0df;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-right: 6px;
+  color: #2ee0df;
 }
-.login-btn{
-    height: 30px;
-    width: 60px;
-    border-radius: 10px;
-    margin-top: 10px;
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px;
+  background-color: #060e1b;
+  border-bottom: 1px solid #0f223d;
 }
-.login-btn:hover{
-    background-color: rgb(99, 99, 119);
-    transition: all 0.2s ease;
+
+.brand-name {
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+  text-decoration: none;
+  border: 1.5px solid #2ee0df;
+  border-radius: 25px;
+  background: rgba(46, 224, 223, 0.1);
+  box-shadow: 0 0 12px rgba(46, 224, 223, 0.4);
+}
+
+.nav-links {
+  display: flex;
+  gap: 18px;
+}
+
+.nav-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.nav-links a:hover {
+  color: #2ee0df;
+}
+
+/* Auth Card Layout */
+.login-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.auth-card {
+  background: #091527;
+  border: 1px solid #142c4c;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.3s ease;
+}
+
+.auth-card:hover {
+  border-color: #2ee0df;
+}
+
+/* Auth Tabs */
+.auth-tabs {
+  display: flex;
+  background: #050b14;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+  border: 1px solid #142c4c;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+  background: #2ee0df;
+  color: #050b14;
+}
+
+/* Auth Header */
+.auth-header h2 {
+  margin: 0 0 6px 0;
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+.auth-header p {
+  margin: 0 0 20px 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* Form Controls */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group.hidden {
+  display: none;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #050b14;
+  border: 1px solid #142c4c;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: #2ee0df;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background: #2ee0df;
+  color: #050b14;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: opacity 0.2s ease;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}
+
+/* Footer Link */
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.auth-footer a {
+  color: #2ee0df;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.site-footer {
+  background: #040810;
+  border-top: 1px solid #0f223d;
+  padding: 15px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
 }

@@ -1,21 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="login.css">
-    <title>authentication</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Login | Jomba Tech Institute</title>
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
-  <form action="dashboard.html" class="login">
-   <div class="attributes"> 
-     username: <input type="text" name="username" placeholder="username" style="margin-bottom: 10px;
-     border: none;"><br>
-    password: <input type="password" placeholder="password" style="border: none;"> <br>
-  <button type="submit" class="login-btn">login</button>
-  <p>don't have an account? <a href="create account.html">create account</a></p>
+
+  <div class="description">
+    <span>
+      <span class="brand-pill">JOMBATECH</span>
+      STUDENT & ADMIN PORTAL
+    </span>
   </div>
-   
-  </form>  
+
+  <header class="navbar">
+    <div class="nav-brand">
+      <a href="dashboard.html" class="brand-name">JOMBATECH</a>
+    </div>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Home</a>
+      <a href="computer class.html">Computer Class</a>
+      <a href="repair class.html">Repair Class</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+  </header>
+
+  <main class="login-wrapper">
+    <div class="auth-card">
+      
+      <div class="auth-tabs">
+        <button class="tab-btn active" id="tab-student" onclick="switchRole('student')">Student Portal</button>
+        <button class="tab-btn" id="tab-admin" onclick="switchRole('admin')">Admin Portal</button>
+      </div>
+
+      <div class="auth-header">
+        <h2 id="portal-title">Student Login</h2>
+        <p id="portal-subtitle">Access your enrolled courses and certificate records</p>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuth(event)">
+        
+        <div class="form-group hidden" id="group-fullname">
+          <label for="fullname">Full Official Name (For Certificates)</label>
+          <input type="text" id="fullname" placeholder="e.g., John Mwangi" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email or Phone Number</label>
+          <input type="text" id="email" required placeholder="student@jombatech.com" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" class="form-input">
+        </div>
+
+        <input type="hidden" id="user-role" value="student">
+        <input type="hidden" id="auth-mode" value="login">
+
+        <button type="submit" class="submit-btn" id="submit-btn">Login to Portal</button>
+      </form>
+
+      <div class="auth-footer">
+        <p id="toggle-text">Don't have an account? <a href="register.html" onclick="toggleAuthMode(event)">Register Here</a></p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 JombaTech Institute. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="login.js"></script>
 </body>
 </html>
