@@ -167,9 +167,15 @@ body {
 }
 
 /* Edge-Faded Hero Banner Image */
+/* Edge-Faded Hero Banner Image */
 .faded-banner-img {
   width: 100%;
-  max-width: 900px; /* Adjust based on your preferred container size */
+  max-width: 900px;
+  
+  /* Set controlled height & prevent image distortion */
+  height: 260px;
+  object-fit: cover;
+  object-position: center; /* Keeps important center text/subject visible */
   
   display: block;
   margin: 0 auto;
@@ -191,8 +197,36 @@ body {
     transparent 100%
   );
   
-  /* Optional: Adds a dark ambient glow around the banner */
   box-shadow: 0 0 30px rgba(5, 11, 20, 0.9);
+}
+
+/* Adjust banner height for tablets and small screens */
+@media (max-width: 768px) {
+  .faded-banner-img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faded-banner-img {
+    height: 140px;
+    
+    /* Soften the side mask on small screens so main content isn't cut off */
+    -webkit-mask-image: linear-gradient(
+      to right, 
+      transparent 0%, 
+      black 5%, 
+      black 95%, 
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right, 
+      transparent 0%, 
+      black 5%, 
+      black 95%, 
+      transparent 100%
+    );
+  }
 }
 /* Page Container Layout */
 .page-container {
