@@ -12,15 +12,15 @@ function switchRole(role) {
   const portalSubtitle = document.getElementById('portal-subtitle');
 
   if (role === 'admin') {
-    tabAdmin.classList.add('active');
-    tabStudent.classList.remove('active');
-    portalTitle.textContent = 'Admin Portal Login';
-    portalSubtitle.textContent = 'Access system dashboard and management controls';
+    tabAdmin?.classList.add('active');
+    tabStudent?.classList.remove('active');
+    if (portalTitle) portalTitle.textContent = 'Admin Portal Login';
+    if (portalSubtitle) portalSubtitle.textContent = 'Access system dashboard and management controls';
   } else {
-    tabStudent.classList.add('active');
-    tabAdmin.classList.remove('active');
-    portalTitle.textContent = 'Student Login';
-    portalSubtitle.textContent = 'Access your enrolled courses and certificate records';
+    tabStudent?.classList.add('active');
+    tabAdmin?.classList.remove('active');
+    if (portalTitle) portalTitle.textContent = 'Student Login';
+    if (portalSubtitle) portalSubtitle.textContent = 'Access your enrolled courses and certificate records';
   }
 }
 
@@ -28,7 +28,6 @@ function switchRole(role) {
 async function handleLogin(event) {
   event.preventDefault();
 
-  // Corrected IDs matching your HTML file
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
   const roleInput = document.getElementById('user-role');
@@ -52,14 +51,19 @@ async function handleLogin(event) {
     const data = await response.json();
 
     if (response.ok) {
-      // Save session info to localStorage for frontend display
+      // Save session info and token to localStorage
       localStorage.setItem('active_user', JSON.stringify(data.user));
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
+
       alert(`Welcome back, ${data.user.fullName || data.user.full_name}!`);
 
+      // FIXED REDIRECT PATHS WITH LEADING SLASHES
       if (data.user.role === 'admin') {
-        window.location.href = 'admin';
+        window.location.href = '/admin';
       } else {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/';
       }
     } else {
       alert(data.error || 'Invalid email or password.');
