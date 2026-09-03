@@ -24,9 +24,14 @@ app.use(
   })
 );
 
-// Basic Middleware
-app.use(cors());
-app.use(cookieParser());
+// -----------------------------------------------------------------------------
+// MIDDLEWARES (ORDER IS CRITICAL: MUST BE PLACED BEFORE ALL ROUTE HANDLERS)
+// -----------------------------------------------------------------------------
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+app.use(cookieParser()); // Enables req.cookies for authenticateToken middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

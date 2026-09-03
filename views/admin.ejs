@@ -248,8 +248,19 @@
     async function fetchStudents() {
       const tbody = document.getElementById('studentsTableBody');
       try {
-        const response = await fetch('/api/admin/students');
-        if (!response.ok) throw new Error('Unauthorized or network error.');
+        const response = await fetch('/api/admin/students', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include' // Sends httpOnly authentication cookie
+        });
+
+        if (!response.ok) {
+          const errData = await response.json().catch(() => ({}));
+          throw new Error(errData.error || `Server responded with status ${response.status}`);
+        }
+
         const students = await response.json();
 
         if (students.length === 0) {
@@ -300,6 +311,7 @@
         const response = await fetch(`/api/admin/students/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include', // Sends httpOnly authentication cookie
           body: JSON.stringify(payload)
         });
 
@@ -319,7 +331,11 @@
       if (!confirm('Are you sure you want to permanently delete this student record?')) return;
 
       try {
-        const response = await fetch(`/api/admin/students/${id}`, { method: 'DELETE' });
+        const response = await fetch(`/api/admin/students/${id}`, { 
+          method: 'DELETE',
+          credentials: 'include' // Sends httpOnly authentication cookie
+        });
+
         const data = await response.json();
         if (response.ok) {
           alert('Student deleted successfully!');
