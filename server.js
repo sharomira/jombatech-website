@@ -145,7 +145,7 @@ app.post(
     body('email').trim().isEmail().withMessage('Please provide a valid email address.').normalizeEmail(),
     body('phone').trim().notEmpty().withMessage('Phone number is required.').escape(),
     body('course').trim().notEmpty().withMessage('Course selection is required.').escape(),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.')
+    body('password').i({ min: 6 }).withMessage('Password must be at least 6 characters long.')
   ],
   validateRequest,
   async (req, res) => {
@@ -481,6 +481,6 @@ app.delete(
   }
 );
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
