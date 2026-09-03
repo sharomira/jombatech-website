@@ -46,8 +46,11 @@ app.use(express.static(__dirname));
 const queryDb = (text, params = []) => {
   return new Promise((resolve, reject) => {
     if (typeof db.query === 'function') {
-      // PostgreSQL / Neon driver
-      db.query(text, params)
+      // PostgreSQL / Neon driver: Convert '?' placeholders to '$1', '$2', etc.
+      let paramIndex = 1;
+      const pgText = text.replace(/\?/g, () => `$${paramIndex++}`);
+      
+      db.query(pgText, params)
         .then((res) => resolve(res.rows || res))
         .catch((err) => reject(err));
     } else if (typeof db.all === 'function') {
@@ -415,7 +418,7 @@ app.get('/api/admin/students', authenticateToken, async (req, res) => {
 
   try {
     const students = await queryDb(
-      'SELECT id, student_id, full_name, email, phone, course, created_at FROM students ORDER BY id DESC'
+      'SELECT id, student_id, full_name, email, phone, course FROM students ORDER BY id DESC'
     );
     res.json(students);
   } catch (error) {
