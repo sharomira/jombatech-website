@@ -237,7 +237,7 @@ app.post(
         
         // Fallback check for emergency hardcoded admin credentials if DB table is empty
         if (admins.length === 0) {
-          if (email === 'johnmachriamuriithi@gmail.com' && password === 'jombatech254') {
+          if (email === 'admin@jombatech.com' && password === 'admin123') {
             const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
             const token = generateAuthToken(adminUser);
             res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
