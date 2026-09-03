@@ -145,7 +145,7 @@ app.post(
     body('email').trim().isEmail().withMessage('Please provide a valid email address.').normalizeEmail(),
     body('phone').trim().notEmpty().withMessage('Phone number is required.').escape(),
     body('course').trim().notEmpty().withMessage('Course selection is required.').escape(),
-    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.')
+    body('password').i({ min: 6 }).withMessage('Password must be at least 6 characters long.')
   ],
   validateRequest,
   async (req, res) => {
@@ -237,7 +237,7 @@ app.post(
         
         // Fallback check for emergency hardcoded admin credentials if DB table is empty
         if (admins.length === 0) {
-          if (email === 'admin@jombatech.com' && password === 'admin123') {
+          if (email === 'johnmachriamuriithi@gmail.com' && password === 'jombatech254') {
             const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
             const token = generateAuthToken(adminUser);
             res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
