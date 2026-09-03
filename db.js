@@ -1,6 +1,6 @@
 const { Pool } = require('pg');
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_Xt3dQvzjRUJ2@ep-frosty-meadow-aetexufz-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require';
+const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_gukw23DtfAFN@ep-frosty-meadow-aetexufz-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require';
 
 const pool = new Pool({
   connectionString: connectionString,
