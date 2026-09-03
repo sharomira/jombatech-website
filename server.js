@@ -235,20 +235,26 @@ app.post(
       if (role === 'admin') {
         const admins = await queryDb('SELECT * FROM admins WHERE LOWER(email) = LOWER(?)', [email]);
         
-        // Fallback check for emergency hardcoded admin credentials if DB table is empty
-        if (admins.length === 0) {
+        if (!Array.isArray(admins) || admins.length === 0) {
+          // Fallback check for emergency hardcoded admin credentials if DB table is empty
           if (email === 'admin@jombatech.com' && password === 'admin123') {
             const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
             const token = generateAuthToken(adminUser);
             res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
             return res.json({ message: 'Admin login successful.', user: adminUser, token });
           }
-          return res.status(401).json({ error: 'Invalid admin credentials.' });
+          return res.status(401).json({ error: 'Invalid email or password.' });
         }
 
         const admin = admins[0];
+
+        // Strict verification that retrieved record strictly matches supplied email
+        if (!admin.email || admin.email.toLowerCase() !== email.toLowerCase()) {
+          return res.status(401).json({ error: 'Invalid email or password.' });
+        }
+
         const match = await bcrypt.compare(password, admin.password_hash);
-        if (!match) return res.status(401).json({ error: 'Invalid admin credentials.' });
+        if (!match) return res.status(401).json({ error: 'Invalid email or password.' });
 
         const adminUser = { id: admin.id, fullName: admin.full_name, email: admin.email, role: 'admin' };
         const token = generateAuthToken(adminUser);
@@ -259,23 +265,30 @@ app.post(
 
       // STUDENT LOGIN HANDLER
       const students = await queryDb('SELECT * FROM students WHERE LOWER(email) = LOWER(?)', [email]);
-      if (students.length === 0) {
-        return res.status(404).json({ error: 'No account found with this email address.' });
+      
+      if (!Array.isArray(students) || students.length === 0) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
       }
 
       const student = students[0];
+
+      // Strict verification that retrieved record strictly matches supplied email
+      if (!student.email || student.email.toLowerCase() !== email.toLowerCase()) {
+        return res.status(401).json({ error: 'Invalid email or password.' });
+      }
+
       const match = await bcrypt.compare(password, student.password_hash);
-      if (!match) return res.status(401).json({ error: 'Incorrect password.' });
+      if (!match) return res.status(401).json({ error: 'Invalid email or password.' });
 
       delete student.password_hash;
       student.role = 'student';
 
       const token = generateAuthToken(student);
       res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
-      res.json({ message: 'Login successful.', user: student, token });
+      return res.json({ message: 'Login successful.', user: student, token });
     } catch (error) {
       console.error('Login error:', error.message);
-      res.status(500).json({ error: 'Authentication failed.' });
+      return res.status(500).json({ error: 'Authentication failed.' });
     }
   }
 );
