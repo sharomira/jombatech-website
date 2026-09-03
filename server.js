@@ -36,6 +36,36 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname));
 
 // -----------------------------------------------------------------------------
+// HELPER: DATABASE QUERY PROMISIFIER (Supports both SQLite & PostgreSQL)
+// -----------------------------------------------------------------------------
+const queryDb = (text, params = []) => {
+  return new Promise((resolve, reject) => {
+    if (typeof db.query === 'function') {
+      // PostgreSQL / Neon driver
+      db.query(text, params)
+        .then((res) => resolve(res.rows || res))
+        .catch((err) => reject(err));
+    } else if (typeof db.all === 'function') {
+      // SQLite driver
+      const isSelect = text.trim().toUpperCase().startsWith('SELECT');
+      if (isSelect) {
+        db.all(text, params, (err, rows) => {
+          if (err) return reject(err);
+          resolve(rows);
+        });
+      } else {
+        db.run(text, params, function (err) {
+          if (err) return reject(err);
+          resolve({ id: this.lastID, changes: this.changes });
+        });
+      }
+    } else {
+      reject(new Error('Unsupported database interface.'));
+    }
+  });
+};
+
+// -----------------------------------------------------------------------------
 // SECURITY & AUTHENTICATION HELPERS
 // -----------------------------------------------------------------------------
 
@@ -95,10 +125,10 @@ app.get('/', (req, res) => {
 });
 
 // -----------------------------------------------------------------------------
-// STUDENT AUTHENTICATION API ROUTES
+// AUTHENTICATION API ROUTES
 // -----------------------------------------------------------------------------
 
-// POST /api/register
+// POST /api/register (Student Registration)
 app.post(
   '/api/register',
   registerLimiter,
@@ -113,50 +143,73 @@ app.post(
   async (req, res) => {
     const { fullName, email, phone, course, password } = req.body;
 
-    db.all('SELECT * FROM students WHERE LOWER(email) = ?', [email], async (err, rows) => {
-      if (err) {
-        console.error('Registration query error:', err.message);
-        return res.status(500).json({ error: 'Database error during registration.' });
-      }
-
-      if (rows && rows.length > 0) {
+    try {
+      const existing = await queryDb('SELECT * FROM students WHERE LOWER(email) = LOWER(?)', [email]);
+      if (existing.length > 0) {
         return res.status(400).json({ error: 'An account with this email already exists.' });
       }
 
-      try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const studentId = 'JTI-' + Math.floor(1000 + Math.random() * 9000);
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const studentId = 'JTI-' + Math.floor(1000 + Math.random() * 9000);
 
-        const insertQuery = `
-          INSERT INTO students (student_id, full_name, email, phone, course, password_hash)
-          VALUES (?, ?, ?, ?, ?, ?)
-        `;
+      const insertQuery = `
+        INSERT INTO students (student_id, full_name, email, phone, course, password_hash)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
 
-        db.run(insertQuery, [studentId, fullName, email, phone, course, hashedPassword], (insertErr) => {
-          if (insertErr) {
-            console.error('Error inserting student:', insertErr.message);
-            return res.status(500).json({ error: 'Failed to create student account.' });
-          }
+      await queryDb(insertQuery, [studentId, fullName, email, phone, course, hashedPassword]);
 
-          res.status(201).json({
-            message: 'Registration successful!',
-            student: {
-              student_id: studentId,
-              full_name: fullName,
-              email: email,
-              course: course
-            }
-          });
-        });
-      } catch (hashError) {
-        console.error('Bcrypt error:', hashError);
-        res.status(500).json({ error: 'Server security error.' });
-      }
-    });
+      res.status(201).json({
+        message: 'Registration successful!',
+        student: { student_id: studentId, full_name: fullName, email, course }
+      });
+    } catch (err) {
+      console.error('Registration error:', err.message);
+      res.status(500).json({ error: 'Failed to create student account.' });
+    }
   }
 );
 
-// POST /api/login
+// POST /api/admin/register (Admin Account Creation)
+app.post(
+  '/api/admin/register',
+  registerLimiter,
+  [
+    body('fullName').trim().notEmpty().withMessage('Full name is required.').escape(),
+    body('email').trim().isEmail().withMessage('Valid email required.').normalizeEmail(),
+    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.'),
+    body('adminSecret').notEmpty().withMessage('Admin secret key is required.')
+  ],
+  validateRequest,
+  async (req, res) => {
+    const { fullName, email, password, adminSecret } = req.body;
+
+    const EXPECTED_SECRET = process.env.ADMIN_REGISTRATION_KEY || 'jombatech_admin_secret_2026';
+    if (adminSecret !== EXPECTED_SECRET) {
+      return res.status(403).json({ error: 'Unauthorized: Invalid Admin Registration Key.' });
+    }
+
+    try {
+      const existingAdmin = await queryDb('SELECT * FROM admins WHERE LOWER(email) = LOWER(?)', [email]);
+      if (existingAdmin.length > 0) {
+        return res.status(400).json({ error: 'An admin with this email already exists.' });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await queryDb(
+        'INSERT INTO admins (full_name, email, password_hash) VALUES (?, ?, ?)',
+        [fullName, email, hashedPassword]
+      );
+
+      res.status(201).json({ message: 'Admin account created successfully.' });
+    } catch (error) {
+      console.error('Admin Registration error:', error.message);
+      res.status(500).json({ error: 'Failed to create admin account.' });
+    }
+  }
+);
+
+// POST /api/login (Unified Student and Admin Login)
 app.post(
   '/api/login',
   authLimiter,
@@ -166,72 +219,56 @@ app.post(
     body('role').optional().trim().escape()
   ],
   validateRequest,
-  (req, res) => {
+  async (req, res) => {
     const { email, password, role } = req.body;
 
-    // Admin Login Handler
-    if (role === 'admin') {
-      if (email === 'admin@jombatech.com' && password === 'admin123') {
-        const adminUser = { fullName: 'System Administrator', email: email, role: 'admin' };
+    try {
+      // ADMIN LOGIN HANDLER
+      if (role === 'admin') {
+        const admins = await queryDb('SELECT * FROM admins WHERE LOWER(email) = LOWER(?)', [email]);
+        
+        // Fallback check for emergency hardcoded admin credentials if DB table is empty
+        if (admins.length === 0) {
+          if (email === 'admin@jombatech.com' && password === 'admin123') {
+            const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
+            const token = generateAuthToken(adminUser);
+            res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
+            return res.json({ message: 'Admin login successful.', user: adminUser, token });
+          }
+          return res.status(401).json({ error: 'Invalid admin credentials.' });
+        }
+
+        const admin = admins[0];
+        const match = await bcrypt.compare(password, admin.password_hash);
+        if (!match) return res.status(401).json({ error: 'Invalid admin credentials.' });
+
+        const adminUser = { id: admin.id, fullName: admin.full_name, email: admin.email, role: 'admin' };
         const token = generateAuthToken(adminUser);
 
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: IS_PRODUCTION,
-          sameSite: 'lax',
-          maxAge: 2 * 60 * 60 * 1000
-        });
-
-        return res.json({
-          message: 'Admin authentication successful.',
-          user: adminUser,
-          token: token
-        });
-      } else {
-        return res.status(401).json({ error: 'Invalid admin credentials.' });
-      }
-    }
-
-    // Student Login Query
-    db.all('SELECT * FROM students WHERE LOWER(email) = ?', [email], async (err, rows) => {
-      if (err) {
-        console.error('Login query error:', err.message);
-        return res.status(500).json({ error: 'Database error during login.' });
+        res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
+        return res.json({ message: 'Admin login successful.', user: adminUser, token });
       }
 
-      if (!rows || rows.length === 0) {
+      // STUDENT LOGIN HANDLER
+      const students = await queryDb('SELECT * FROM students WHERE LOWER(email) = LOWER(?)', [email]);
+      if (students.length === 0) {
         return res.status(404).json({ error: 'No account found with this email address.' });
       }
 
-      const student = rows[0];
+      const student = students[0];
+      const match = await bcrypt.compare(password, student.password_hash);
+      if (!match) return res.status(401).json({ error: 'Incorrect password.' });
 
-      try {
-        const passwordMatch = await bcrypt.compare(password, student.password_hash);
-        if (!passwordMatch) {
-          return res.status(401).json({ error: 'Incorrect password.' });
-        }
+      delete student.password_hash;
+      student.role = 'student';
 
-        delete student.password_hash;
-        student.role = 'student';
-
-        const token = generateAuthToken(student);
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: IS_PRODUCTION,
-          sameSite: 'lax',
-          maxAge: 2 * 60 * 60 * 1000
-        });
-
-        res.json({
-          message: 'Login successful.',
-          user: student,
-          token: token
-        });
-      } catch (compErr) {
-        console.error('Password comparison error:', compErr);
-        res.status(500).json({ error: 'Authentication error.' });
-      }
-    });
+      const token = generateAuthToken(student);
+      res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
+      res.json({ message: 'Login successful.', user: student, token });
+    } catch (error) {
+      console.error('Login error:', error.message);
+      res.status(500).json({ error: 'Authentication failed.' });
+    }
   }
 );
 
@@ -245,36 +282,23 @@ app.post(
     body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long.')
   ],
   validateRequest,
-  (req, res) => {
+  async (req, res) => {
     const { email, phone, newPassword } = req.body;
 
-    db.all('SELECT * FROM students WHERE LOWER(email) = ? AND phone = ?', [email, phone], async (err, rows) => {
-      if (err) {
-        console.error('Reset-password query error:', err.message);
-        return res.status(500).json({ error: 'Database error checking account.' });
-      }
-
-      if (!rows || rows.length === 0) {
+    try {
+      const rows = await queryDb('SELECT * FROM students WHERE LOWER(email) = LOWER(?) AND phone = ?', [email, phone]);
+      if (rows.length === 0) {
         return res.status(400).json({ error: 'Email and phone number do not match our records.' });
       }
 
-      try {
-        const newHashedPassword = await bcrypt.hash(newPassword, 10);
-        const updateQuery = 'UPDATE students SET password_hash = ? WHERE LOWER(email) = ?';
+      const newHashedPassword = await bcrypt.hash(newPassword, 10);
+      await queryDb('UPDATE students SET password_hash = ? WHERE LOWER(email) = LOWER(?)', [newHashedPassword, email]);
 
-        db.run(updateQuery, [newHashedPassword, email], (updateErr) => {
-          if (updateErr) {
-            console.error('Error updating password:', updateErr.message);
-            return res.status(500).json({ error: 'Failed to update password.' });
-          }
-
-          res.json({ message: 'Password updated successfully across all devices!' });
-        });
-      } catch (hashErr) {
-        console.error('Bcrypt error on password reset:', hashErr);
-        res.status(500).json({ error: 'Server security error.' });
-      }
-    });
+      res.json({ message: 'Password updated successfully across all devices!' });
+    } catch (error) {
+      console.error('Reset-password error:', error.message);
+      res.status(500).json({ error: 'Failed to reset password.' });
+    }
   }
 );
 
@@ -282,28 +306,28 @@ app.post(
 // SHOP & ADMIN PRODUCTS ROUTES
 // -----------------------------------------------------------------------------
 
-app.get('/api/products', (req, res) => {
-  db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
-    if (err) {
-      console.error('API Error fetching products:', err.message);
-      return res.status(500).json({ error: 'Failed to retrieve products from database' });
-    }
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await queryDb('SELECT * FROM products ORDER BY id DESC');
     res.json(products || []);
-  });
+  } catch (err) {
+    console.error('API Error fetching products:', err.message);
+    res.status(500).json({ error: 'Failed to retrieve products from database' });
+  }
 });
 
-app.get('/admin', authenticateToken, (req, res) => {
+app.get('/admin', authenticateToken, async (req, res) => {
   if (req.user.role !== 'admin') {
     return res.status(403).send('Access denied: Admins only.');
   }
 
-  db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
-    if (err) {
-      console.error('Error fetching products:', err.message);
-      return res.render('admin', { products: [] });
-    }
+  try {
+    const products = await queryDb('SELECT * FROM products ORDER BY id DESC');
     res.render('admin', { products });
-  });
+  } catch (err) {
+    console.error('Error fetching products:', err.message);
+    res.render('admin', { products: [] });
+  }
 });
 
 app.post(
@@ -316,16 +340,17 @@ app.post(
     body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
   ],
   validateRequest,
-  (req, res) => {
+  async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { title, category, price, image } = req.body;
-    const query = `INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)`;
-
-    db.run(query, [title, category, price, image], (err) => {
-      if (err) console.error('Error inserting product:', err.message);
+    try {
+      await queryDb('INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)', [title, category, price, image]);
       res.redirect('/admin');
-    });
+    } catch (err) {
+      console.error('Error inserting product:', err.message);
+      res.status(500).send('Failed to add product.');
+    }
   }
 );
 
@@ -340,17 +365,19 @@ app.post(
     body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
   ],
   validateRequest,
-  (req, res) => {
+  async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { id } = req.params;
     const { title, category, price, image } = req.body;
-    const query = `UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?`;
 
-    db.run(query, [title, category, price, image, id], (err) => {
-      if (err) console.error('Error updating product:', err.message);
+    try {
+      await queryDb('UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?', [title, category, price, image, id]);
       res.redirect('/admin');
-    });
+    } catch (err) {
+      console.error('Error updating product:', err.message);
+      res.status(500).send('Failed to update product.');
+    }
   }
 );
 
@@ -359,16 +386,90 @@ app.post(
   authenticateToken,
   [param('id').isInt().withMessage('Product ID must be an integer.')],
   validateRequest,
-  (req, res) => {
+  async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { id } = req.params;
-    const query = `DELETE FROM products WHERE id = ?`;
-
-    db.run(query, [id], (err) => {
-      if (err) console.error('Error deleting product:', err.message);
+    try {
+      await queryDb('DELETE FROM products WHERE id = ?', [id]);
       res.redirect('/admin');
-    });
+    } catch (err) {
+      console.error('Error deleting product:', err.message);
+      res.status(500).send('Failed to delete product.');
+    }
+  }
+);
+
+// -----------------------------------------------------------------------------
+// ADMIN STUDENT MANAGEMENT ROUTES (Admins Only)
+// -----------------------------------------------------------------------------
+
+// GET all students
+app.get('/api/admin/students', authenticateToken, async (req, res) => {
+  if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
+  try {
+    const students = await queryDb(
+      'SELECT id, student_id, full_name, email, phone, course, created_at FROM students ORDER BY id DESC'
+    );
+    res.json(students);
+  } catch (error) {
+    console.error('Fetch students error:', error.message);
+    res.status(500).json({ error: 'Failed to retrieve students.' });
+  }
+});
+
+// UPDATE a student record
+app.put(
+  '/api/admin/students/:id',
+  authenticateToken,
+  [
+    param('id').isInt().withMessage('Student ID must be an integer.'),
+    body('fullName').trim().notEmpty().withMessage('Full name required.').escape(),
+    body('email').trim().isEmail().withMessage('Valid email required.').normalizeEmail(),
+    body('phone').trim().notEmpty().withMessage('Phone required.').escape(),
+    body('course').trim().notEmpty().withMessage('Course required.').escape()
+  ],
+  validateRequest,
+  async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
+    const { id } = req.params;
+    const { fullName, email, phone, course } = req.body;
+
+    try {
+      const updateQuery = `
+        UPDATE students 
+        SET full_name = ?, email = ?, phone = ?, course = ? 
+        WHERE id = ?
+      `;
+      await queryDb(updateQuery, [fullName, email, phone, course, id]);
+      res.json({ message: 'Student record updated successfully.' });
+    } catch (error) {
+      console.error('Update student error:', error.message);
+      res.status(500).json({ error: 'Failed to update student record.' });
+    }
+  }
+);
+
+// DELETE a student record
+app.delete(
+  '/api/admin/students/:id',
+  authenticateToken,
+  [param('id').isInt().withMessage('Student ID must be an integer.')],
+  validateRequest,
+  async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
+    const { id } = req.params;
+
+    try {
+      await queryDb('DELETE FROM students WHERE id = ?', [id]);
+      res.json({ message: 'Student deleted successfully.' });
+    } catch (error) {
+      console.error('Delete student error:', error.message);
+      res.status(500).json({ error: 'Failed to delete student.' });
+    }
   }
 );
 
