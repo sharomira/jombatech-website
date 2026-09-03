@@ -3,22 +3,84 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+// CRITICAL FOR RENDER: Trust Render's reverse proxy so rate-limiting correctly identifies client IPs
+app.set('trust proxy', 1);
+
+// Security Headers
+app.use(
+  helmet({
+    contentSecurityPolicy: false // Set false if loading external resources/CDNs
+  })
+);
+
+// Basic Middleware
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// EJS setup
+// EJS Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(__dirname));
 
-// Landing page
+// -----------------------------------------------------------------------------
+// SECURITY & AUTHENTICATION HELPERS
+// -----------------------------------------------------------------------------
+
+// Rate limiter for authentication attempts (5 requests per 15 mins)
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many login or reset attempts. Please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Rate limiter for public account creation (10 registrations per hour)
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { error: 'Registration limit reached for this IP. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Helper to sign JWT tokens
+function generateAuthToken(user) {
+  return jwt.sign(
+    { id: user.id, student_id: user.student_id || null, role: user.role || 'student' },
+    process.env.JWT_SECRET || 'jombatech_secret_key_2026',
+    { expiresIn: '2h' }
+  );
+}
+
+// Middleware to verify active sessions on protected routes
+function authenticateToken(req, res, next) {
+  const token = req.cookies.token || req.headers['authorization']?.split(' ')[1];
+
+  if (!token) return res.status(401).json({ error: 'Access denied. Please log in.' });
+
+  jwt.verify(token, process.env.JWT_SECRET || 'jombatech_secret_key_2026', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid or expired session token.' });
+    req.user = user;
+    next();
+  });
+}
+
+// -----------------------------------------------------------------------------
+// PUBLIC & LANDING ROUTES
+// -----------------------------------------------------------------------------
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'), (err) => {
     if (err) res.status(500).send('Could not load dashboard.html');
@@ -30,7 +92,7 @@ app.get('/', (req, res) => {
 // -----------------------------------------------------------------------------
 
 // POST /api/register
-app.post('/api/register', async (req, res) => {
+app.post('/api/register', registerLimiter, async (req, res) => {
   const { fullName, email, phone, course, password } = req.body;
 
   if (!fullName || !email || !phone || !course || !password) {
@@ -40,7 +102,6 @@ app.post('/api/register', async (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
   const cleanPhone = phone.trim();
 
-  // 1. Check if student email already exists
   db.all('SELECT * FROM students WHERE LOWER(email) = ?', [cleanEmail], async (err, rows) => {
     if (err) {
       console.error('Registration query error:', err.message);
@@ -52,7 +113,6 @@ app.post('/api/register', async (req, res) => {
     }
 
     try {
-      // 2. Hash password & generate unique student ID
       const hashedPassword = await bcrypt.hash(password, 10);
       const studentId = 'JTI-' + Math.floor(1000 + Math.random() * 9000);
 
@@ -61,7 +121,6 @@ app.post('/api/register', async (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?)
       `;
 
-      // 3. Insert record into Neon PostgreSQL via db wrapper
       db.run(insertQuery, [studentId, fullName, cleanEmail, cleanPhone, course, hashedPassword], (insertErr) => {
         if (insertErr) {
           console.error('Error inserting student:', insertErr.message);
@@ -86,7 +145,7 @@ app.post('/api/register', async (req, res) => {
 });
 
 // POST /api/login
-app.post('/api/login', (req, res) => {
+app.post('/api/login', authLimiter, (req, res) => {
   const { email, password, role } = req.body;
 
   if (!email || !password) {
@@ -98,9 +157,14 @@ app.post('/api/login', (req, res) => {
   // Admin Login Handler
   if (role === 'admin') {
     if (cleanEmail === 'admin@jombatech.com' && password === 'admin123') {
+      const adminUser = { fullName: 'System Administrator', email: cleanEmail, role: 'admin' };
+      const token = generateAuthToken(adminUser);
+
+      res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000 });
       return res.json({
         message: 'Admin authentication successful.',
-        user: { fullName: 'System Administrator', email: cleanEmail, role: 'admin' }
+        user: adminUser,
+        token: token
       });
     } else {
       return res.status(401).json({ error: 'Invalid admin credentials.' });
@@ -126,10 +190,16 @@ app.post('/api/login', (req, res) => {
         return res.status(401).json({ error: 'Incorrect password.' });
       }
 
-      delete student.password_hash; // Omit hash before sending response
+      delete student.password_hash;
+      student.role = 'student';
+
+      const token = generateAuthToken(student);
+      res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000 });
+
       res.json({
         message: 'Login successful.',
-        user: student
+        user: student,
+        token: token
       });
     } catch (compErr) {
       console.error('Password comparison error:', compErr);
@@ -139,7 +209,7 @@ app.post('/api/login', (req, res) => {
 });
 
 // POST /api/reset-password
-app.post('/api/reset-password', (req, res) => {
+app.post('/api/reset-password', authLimiter, (req, res) => {
   const { email, phone, newPassword } = req.body;
 
   if (!email || !phone || !newPassword) {
@@ -149,7 +219,6 @@ app.post('/api/reset-password', (req, res) => {
   const cleanEmail = email.trim().toLowerCase();
   const cleanPhone = phone.trim();
 
-  // Verify match on email AND phone
   db.all('SELECT * FROM students WHERE LOWER(email) = ? AND phone = ?', [cleanEmail, cleanPhone], async (err, rows) => {
     if (err) {
       console.error('Reset-password query error:', err.message);
@@ -183,7 +252,6 @@ app.post('/api/reset-password', (req, res) => {
 // SHOP & ADMIN PRODUCTS ROUTES
 // -----------------------------------------------------------------------------
 
-// API Route for Frontend Shop
 app.get('/api/products', (req, res) => {
   db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
     if (err) {
@@ -194,7 +262,6 @@ app.get('/api/products', (req, res) => {
   });
 });
 
-// Admin dashboard view
 app.get('/admin', (req, res) => {
   db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
     if (err) {
@@ -205,7 +272,6 @@ app.get('/admin', (req, res) => {
   });
 });
 
-// Add Product
 app.post('/admin/add-product', (req, res) => {
   const { title, category, price, image } = req.body;
   const query = `INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)`;
@@ -216,7 +282,6 @@ app.post('/admin/add-product', (req, res) => {
   });
 });
 
-// Update Product
 app.post('/admin/update-product/:id', (req, res) => {
   const { id } = req.params;
   const { title, category, price, image } = req.body;
@@ -228,7 +293,6 @@ app.post('/admin/update-product/:id', (req, res) => {
   });
 });
 
-// Delete Product
 app.post('/admin/delete-product/:id', (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM products WHERE id = ?`;

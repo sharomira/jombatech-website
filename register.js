@@ -67,7 +67,6 @@ async function handleRegistration(event) {
 document.addEventListener('DOMContentLoaded', () => {
   const registerForm = document.getElementById('register-form');
   if (registerForm) {
-    // Remove existing listener to prevent duplicate triggers
     registerForm.removeEventListener('submit', handleRegistration);
     registerForm.addEventListener('submit', handleRegistration);
   }
