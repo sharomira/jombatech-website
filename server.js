@@ -12,6 +12,7 @@ const db = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Trust reverse proxy for Render deployment
 app.set('trust proxy', 1);
@@ -65,7 +66,7 @@ const validateRequest = (req, res, next) => {
 
 function generateAuthToken(user) {
   return jwt.sign(
-    { id: user.id, student_id: user.student_id || null, role: user.role || 'student' },
+    { id: user.id || user.student_id, student_id: user.student_id || null, role: user.role || 'student' },
     process.env.JWT_SECRET || 'jombatech_secret_key_2026',
     { expiresIn: '2h' }
   );
@@ -174,7 +175,13 @@ app.post(
         const adminUser = { fullName: 'System Administrator', email: email, role: 'admin' };
         const token = generateAuthToken(adminUser);
 
-        res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000 });
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: IS_PRODUCTION,
+          sameSite: 'lax',
+          maxAge: 2 * 60 * 60 * 1000
+        });
+
         return res.json({
           message: 'Admin authentication successful.',
           user: adminUser,
@@ -208,7 +215,12 @@ app.post(
         student.role = 'student';
 
         const token = generateAuthToken(student);
-        res.cookie('token', token, { httpOnly: true, secure: true, maxAge: 2 * 60 * 60 * 1000 });
+        res.cookie('token', token, {
+          httpOnly: true,
+          secure: IS_PRODUCTION,
+          sameSite: 'lax',
+          maxAge: 2 * 60 * 60 * 1000
+        });
 
         res.json({
           message: 'Login successful.',
@@ -280,7 +292,11 @@ app.get('/api/products', (req, res) => {
   });
 });
 
-app.get('/admin', (req, res) => {
+app.get('/admin', authenticateToken, (req, res) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).send('Access denied: Admins only.');
+  }
+
   db.all('SELECT * FROM products ORDER BY id DESC', [], (err, products) => {
     if (err) {
       console.error('Error fetching products:', err.message);
@@ -292,6 +308,7 @@ app.get('/admin', (req, res) => {
 
 app.post(
   '/admin/add-product',
+  authenticateToken,
   [
     body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
     body('category').trim().notEmpty().withMessage('Category is required.').escape(),
@@ -300,6 +317,8 @@ app.post(
   ],
   validateRequest,
   (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
     const { title, category, price, image } = req.body;
     const query = `INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)`;
 
@@ -312,6 +331,7 @@ app.post(
 
 app.post(
   '/admin/update-product/:id',
+  authenticateToken,
   [
     param('id').isInt().withMessage('Product ID must be an integer.'),
     body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
@@ -321,6 +341,8 @@ app.post(
   ],
   validateRequest,
   (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
     const { id } = req.params;
     const { title, category, price, image } = req.body;
     const query = `UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?`;
@@ -334,9 +356,12 @@ app.post(
 
 app.post(
   '/admin/delete-product/:id',
+  authenticateToken,
   [param('id').isInt().withMessage('Product ID must be an integer.')],
   validateRequest,
   (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
     const { id } = req.params;
     const query = `DELETE FROM products WHERE id = ?`;
 
