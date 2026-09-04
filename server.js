@@ -144,9 +144,9 @@ app.get('/', (req, res) => {
 });
 
 // Student Resources Portal Route
-app.get('/student-resources', (req, res) => {
-  res.sendFile(path.join(__dirname, 'student-resources.html'), (err) => {
-    if (err) res.status(500).send('Could not load student-resources.html');
+app.get('/students-resources', (req, res) => {
+  res.sendFile(path.join(__dirname, 'students-resources.html'), (err) => {
+    if (err) res.status(500).send('Could not load students-resources.html');
   });
 });
 

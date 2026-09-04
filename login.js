@@ -88,7 +88,7 @@ async function handleLogin(event) {
       if (data.user.role === 'admin') {
         window.location.href = '/admin';
       } else {
-        window.location.href = 'student-resources.html';
+        window.location.href = 'students-resources.html';
       }
     } else {
       alert(data.error || 'Invalid email or password.');
