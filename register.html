@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Student Account | Jomba Tech Institute</title>
- <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="stylesheet" href="register.css">
 </head>
 <body>
@@ -64,9 +64,13 @@
           </select>
         </div>
 
+        <!-- Password Field Wrapped with Show/Hide Toggle Button -->
         <div class="form-group">
           <label for="password">Create Password</label>
-          <input type="password" id="password" required placeholder="••••••••" class="form-input" minlength="6">
+          <div class="password-wrapper">
+            <input type="password" id="password" required placeholder="••••••••" class="form-input" minlength="6">
+            <button type="button" class="toggle-password-btn" id="toggle-password" onclick="togglePasswordVisibility()">Show</button>
+          </div>
         </div>
 
         <button type="submit" class="submit-btn">Register Account</button>
