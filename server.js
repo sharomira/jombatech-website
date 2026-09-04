@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multerStorageCloudinary = require('multer-storage-cloudinary');
 const { body, param, validationResult } = require('express-validator');
 const db = require('./db');
 
@@ -19,6 +19,18 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Trust reverse proxy for Render deployment
 app.set('trust proxy', 1);
+
+// Safely resolve CloudinaryStorage constructor across different package versions
+const CloudinaryStorage = multerStorageCloudinary.CloudinaryStorage || multerStorageCloudinary;
+
+// Check critical Cloudinary environment variables on startup
+const missingEnvVars = ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'].filter(
+  (key) => !process.env[key]
+);
+
+if (missingEnvVars.length > 0) {
+  console.warn(`⚠️ Warning: Missing Cloudinary environment variables: ${missingEnvVars.join(', ')}`);
+}
 
 // Configure Cloudinary Credentials
 cloudinary.config({
