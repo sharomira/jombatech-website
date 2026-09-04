@@ -150,6 +150,35 @@ body {
   font-weight: 600;
 }
 
+/* Password Field Wrapper & Show/Hide Toggle Styles */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper .form-input {
+  padding-right: 55px; /* Leave space so text doesn't overlap button */
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.toggle-password-btn:hover {
+  color: #60a5fa;
+}
+
 .form-input {
   width: 100%;
   padding: 12px 14px;

@@ -1,5 +1,21 @@
 let currentRole = 'student';
 
+// Toggle password visibility (Show/Hide)
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.getElementById('toggle-password');
+
+  if (!passwordInput || !toggleBtn) return;
+
+  if (passwordInput.type === 'password') {
+    passwordInput.type = 'text';
+    toggleBtn.textContent = 'Hide';
+  } else {
+    passwordInput.type = 'password';
+    toggleBtn.textContent = 'Show';
+  }
+}
+
 // Function called by tab buttons in HTML
 function switchRole(role) {
   currentRole = role;
