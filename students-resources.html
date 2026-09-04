@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Resources | Jomba Tech Institute</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="stylesheet" href="student-resources.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="description">
+    <span>
+      <span class="brand-pill">JOMBATECH</span>
+      STUDENT STUDY HUB & EXAM PORTAL
+    </span>
+  </div>
+
+  <!-- Navigation Header -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <a href="dashboard.html" class="brand-name">JOMBATECH</a>
+    </div>
+
+    <nav class="nav-links">
+      <a href="dashboard.html">Home</a>
+      <a href="student-resources.html" class="active-link">Resources</a>
+      <a href="computer class.html">Computer Class</a>
+      <a href="repair class.html">Repair Class</a>
+      <button type="button" class="logout-btn" onclick="handleLogout()">Logout</button>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="resources-wrapper">
+    <div class="resources-container">
+      
+      <!-- Welcome Header -->
+      <div class="hub-header">
+        <h2 id="welcome-title">Course Notes & Past Papers</h2>
+        <p>Access downloadable lecture materials, practical revision guides, and practice exam questions.</p>
+      </div>
+
+      <!-- Course Category Filter Tabs -->
+      <div class="category-tabs">
+        <button class="tab-btn active" id="tab-all" onclick="filterCategory('all')">All Resources</button>
+        <button class="tab-btn" id="tab-computer" onclick="filterCategory('computer')">Computer Packages</button>
+        <button class="tab-btn" id="tab-repair" onclick="filterCategory('repair')">Electronics & Repair</button>
+        <button class="tab-btn" id="tab-exams" onclick="filterCategory('exams')">Exam Questions</button>
+      </div>
+
+      <!-- Resources Grid -->
+      <div class="resources-grid" id="resources-grid">
+        
+        <!-- Computer Packages Note -->
+        <div class="resource-card" data-category="computer">
+          <div class="card-badge badge-blue">Notes</div>
+          <h3>Microsoft Word & Excel Essentials</h3>
+          <p>Comprehensive guide on document formatting, formulas, tables, and shortcut keys.</p>
+          <div class="card-meta">Format: PDF | Size: 2.4 MB</div>
+          <a href="/downloads/ms-office-guide.pdf" class="download-btn" download>Download Notes</a>
+        </div>
+
+        <!-- Electronics Note -->
+        <div class="resource-card" data-category="repair">
+          <div class="card-badge badge-cyan">Notes</div>
+          <h3>Motherboard Diagnostics & Soldering</h3>
+          <p>Component identification, multimeter testing procedures, and basic circuit repairs.</p>
+          <div class="card-meta">Format: PDF | Size: 4.1 MB</div>
+          <a href="/downloads/motherboard-repair-guide.pdf" class="download-btn" download>Download Notes</a>
+        </div>
+
+        <!-- Exam Paper -->
+        <div class="resource-card" data-category="exams">
+          <div class="card-badge badge-amber">Exam Paper</div>
+          <h3>Computer Packages Revision Questions 2026</h3>
+          <p>Past theory exam papers and practical task prompts covering Word, Excel, and PowerPoint.</p>
+          <div class="card-meta">Format: PDF | Size: 1.8 MB</div>
+          <a href="/downloads/computer-packages-pastpaper.pdf" class="download-btn" download>Download Exam</a>
+        </div>
+
+        <!-- Exam Paper -->
+        <div class="resource-card" data-category="exams">
+          <div class="card-badge badge-amber">Exam Paper</div>
+          <h3>Hardware & Troubleshooting Practice Test</h3>
+          <p>Sample questions on fault tracing, CMOS battery replacement, and power rail diagnostics.</p>
+          <div class="card-meta">Format: PDF | Size: 1.2 MB</div>
+          <a href="/downloads/hardware-repair-pastpaper.pdf" class="download-btn" download>Download Exam</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 JombaTech Institute. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="student-resources.js"></script>
+</body>
+</html>

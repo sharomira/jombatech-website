@@ -1,4 +1,5 @@
 let currentRole = 'student';
+let isSubmitting = false;
 
 // Toggle password visibility (Show/Hide)
 function togglePasswordVisibility() {
@@ -42,11 +43,14 @@ function switchRole(role) {
 
 // Main Login Handler
 async function handleLogin(event) {
-  event.preventDefault();
+  if (event) event.preventDefault();
+
+  if (isSubmitting) return;
 
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
   const roleInput = document.getElementById('user-role');
+  const submitBtn = document.querySelector('#login-form button[type="submit"]') || document.querySelector('button[type="submit"]');
 
   const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
   const password = passwordInput ? passwordInput.value : '';
@@ -58,6 +62,13 @@ async function handleLogin(event) {
   }
 
   try {
+    isSubmitting = true;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.dataset.originalText = submitBtn.textContent;
+      submitBtn.textContent = 'Logging in...';
+    }
+
     const response = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -73,13 +84,11 @@ async function handleLogin(event) {
         localStorage.setItem('token', data.token);
       }
 
-      alert(`Welcome back, ${data.user.fullName || data.user.full_name}!`);
-
-      // FIXED REDIRECT PATHS WITH LEADING SLASHES
+      // Redirect user according to role
       if (data.user.role === 'admin') {
         window.location.href = '/admin';
       } else {
-        window.location.href = '/';
+        window.location.href = 'student-resources.html';
       }
     } else {
       alert(data.error || 'Invalid email or password.');
@@ -87,5 +96,22 @@ async function handleLogin(event) {
   } catch (error) {
     console.error('Login Fetch Error:', error);
     alert('Unable to connect to the server. Please check your connection.');
+  } finally {
+    isSubmitting = false;
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      if (submitBtn.dataset.originalText) {
+        submitBtn.textContent = submitBtn.dataset.originalText;
+      }
+    }
   }
 }
+
+// Bind submit event safely once DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.removeEventListener('submit', handleLogin);
+    loginForm.addEventListener('submit', handleLogin);
+  }
+});

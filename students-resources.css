@@ -1,0 +1,229 @@
+/* Core Page Layout & Dark Theme Setup */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #050b14;
+  color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header & Navbar */
+.description {
+  background-color: #090977;
+  color: #ffffff;
+  font-size: clamp(0.7rem, 2vw, 0.78rem);
+  font-weight: 600;
+  padding: 8px 12px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-pill {
+  background: rgba(46, 224, 223, 0.2);
+  border: 1px solid #2ee0df;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-right: 6px;
+  color: #2ee0df;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px clamp(12px, 3vw, 24px);
+  background-color: #060e1b;
+  border-bottom: 1px solid #0f223d;
+  gap: 12px;
+}
+
+.brand-name {
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  color: #ffffff;
+  text-decoration: none;
+  border: 1.5px solid #2ee0df;
+  border-radius: 25px;
+  background: rgba(46, 224, 223, 0.1);
+  box-shadow: 0 0 12px rgba(46, 224, 223, 0.3);
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 18px);
+}
+
+.nav-links a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: clamp(0.75rem, 1.8vw, 0.88rem);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover, .nav-links a.active-link {
+  color: #2ee0df;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #f87171;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+/* Resources Wrapper */
+.resources-wrapper {
+  flex: 1;
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 32px);
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hub-header h2 {
+  margin: 0 0 6px 0;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  color: #ffffff;
+}
+
+.hub-header p {
+  margin: 0 0 24px 0;
+  font-size: clamp(0.85rem, 2vw, 0.95rem);
+  color: #94a3b8;
+}
+
+/* Filter Tabs */
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.tab-btn {
+  background: #091527;
+  border: 1px solid #1e3a8a;
+  color: #94a3b8;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover, .tab-btn.active {
+  background: #2ee0df;
+  color: #050b14;
+  border-color: #2ee0df;
+  box-shadow: 0 0 10px rgba(46, 224, 223, 0.3);
+}
+
+/* Resources Grid & Cards */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.resource-card {
+  background: #091527;
+  border: 1px solid #142c4c;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.resource-card:hover {
+  transform: translateY(-3px);
+  border-color: #2ee0df;
+}
+
+.card-badge {
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.badge-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
+.badge-cyan { background: rgba(46, 224, 223, 0.2); color: #2ee0df; border: 1px solid #2ee0df; }
+.badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
+
+.resource-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.resource-card p {
+  margin: 0 0 16px 0;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.card-meta {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 14px;
+}
+
+.download-btn {
+  display: block;
+  text-align: center;
+  background: #1e3a8a;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: background-color 0.2s ease;
+}
+
+.download-btn:hover {
+  background: #2563eb;
+}
+
+/* Footer */
+.site-footer {
+  background: #040810;
+  border-top: 1px solid #0f223d;
+  padding: 15px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.8rem;
+}

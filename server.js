@@ -143,6 +143,13 @@ app.get('/', (req, res) => {
   });
 });
 
+// Student Resources Portal Route
+app.get('/student-resources', (req, res) => {
+  res.sendFile(path.join(__dirname, 'student-resources.html'), (err) => {
+    if (err) res.status(500).send('Could not load student-resources.html');
+  });
+});
+
 // -----------------------------------------------------------------------------
 // STEP 3: SEO ROUTES (ROBOTS.TXT & SITEMAP.XML)
 // -----------------------------------------------------------------------------
@@ -359,6 +366,20 @@ app.post(
     }
   }
 );
+
+// -----------------------------------------------------------------------------
+// STUDENT RESOURCES API ROUTES
+// -----------------------------------------------------------------------------
+
+app.get('/api/student/resources', authenticateToken, async (req, res) => {
+  try {
+    const resources = await queryDb('SELECT * FROM resources ORDER BY id DESC');
+    res.json(resources || []);
+  } catch (err) {
+    console.error('API Error fetching resources:', err.message);
+    res.status(500).json({ error: 'Failed to retrieve study resources.' });
+  }
+});
 
 // -----------------------------------------------------------------------------
 // SHOP & ADMIN PRODUCTS ROUTES
