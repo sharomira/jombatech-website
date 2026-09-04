@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-// ✅ CORRECT
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { body, param, validationResult } = require('express-validator');
 const db = require('./db');
