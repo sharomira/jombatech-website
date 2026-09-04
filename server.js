@@ -402,10 +402,11 @@ app.get('/admin', authenticateToken, async (req, res) => {
 
   try {
     const products = await queryDb('SELECT * FROM products ORDER BY id DESC');
-    res.render('admin', { products });
+    const resources = await queryDb('SELECT * FROM resources ORDER BY id DESC');
+    res.render('admin', { products, resources });
   } catch (err) {
-    console.error('Error fetching products:', err.message);
-    res.render('admin', { products: [] });
+    console.error('Error fetching admin data:', err.message);
+    res.render('admin', { products: [], resources: [] });
   }
 });
 
@@ -429,6 +430,29 @@ app.post(
     } catch (err) {
       console.error('Error inserting product:', err.message);
       res.status(500).send('Failed to add product.');
+    }
+  }
+);
+
+app.post(
+  '/admin/add-resource',
+  authenticateToken,
+  [
+    body('title').trim().notEmpty().withMessage('Resource title is required.').escape(),
+    body('course').trim().notEmpty().withMessage('Course is required.').escape(),
+    body('fileUrl').trim().notEmpty().withMessage('File URL is required.').isURL().withMessage('Must be a valid URL.')
+  ],
+  validateRequest,
+  async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
+    const { title, course, fileUrl } = req.body;
+    try {
+      await queryDb('INSERT INTO resources (title, course, file_url) VALUES (?, ?, ?)', [title, course, fileUrl]);
+      res.redirect('/admin');
+    } catch (err) {
+      console.error('Error adding resource:', err.message);
+      res.status(500).send('Failed to upload study resource.');
     }
   }
 );

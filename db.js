@@ -9,7 +9,7 @@ const pool = new Pool({
   }
 });
 
-// Schema definition for products and students
+// Schema definition for products, students, and student resources
 const createTablesQuery = `
   CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
@@ -32,8 +32,17 @@ const createTablesQuery = `
     registration_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
   );
 
+  CREATE TABLE IF NOT EXISTS resources (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    course VARCHAR(100) NOT NULL,
+    file_url TEXT NOT NULL,
+    uploaded_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  );
+
   CREATE INDEX IF NOT EXISTS idx_students_email ON students(email);
   CREATE INDEX IF NOT EXISTS idx_students_phone ON students(phone);
+  CREATE INDEX IF NOT EXISTS idx_resources_course ON resources(course);
 `;
 
 // Initialize Tables
