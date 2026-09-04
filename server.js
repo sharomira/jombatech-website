@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // Updated to bcryptjs for faster Render deployments
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
@@ -25,6 +25,7 @@ app.use(
     crossOriginResourcePolicy: { policy: "cross-origin" }
   })
 );
+
 // -----------------------------------------------------------------------------
 // MIDDLEWARES (ORDER IS CRITICAL: MUST BE PLACED BEFORE ALL ROUTE HANDLERS)
 // -----------------------------------------------------------------------------
@@ -131,10 +132,42 @@ function authenticateToken(req, res, next) {
 // PUBLIC & LANDING ROUTES
 // -----------------------------------------------------------------------------
 
+// Health check endpoint for Render health monitoring
+app.get('/healthz', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'), (err) => {
     if (err) res.status(500).send('Could not load dashboard.html');
   });
+});
+
+// -----------------------------------------------------------------------------
+// STEP 3: SEO ROUTES (ROBOTS.TXT & SITEMAP.XML)
+// -----------------------------------------------------------------------------
+
+app.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send(`User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://jombatech-website.onrender.com/sitemap.xml`);
+});
+
+app.get('/sitemap.xml', (req, res) => {
+  res.type('application/xml');
+  res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://jombatech-website.onrender.com/</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`);
 });
 
 // -----------------------------------------------------------------------------
@@ -243,7 +276,6 @@ app.post(
         const hasAdmins = Array.isArray(admins) && admins.length > 0;
 
         if (!hasAdmins) {
-          // Fallback check ONLY matches if the submitted email AND password match the emergency credential
           if (email.toLowerCase() === 'admin@jombatech.com' && password === 'admin123') {
             const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
             const token = generateAuthToken(adminUser);
@@ -255,7 +287,6 @@ app.post(
 
         const admin = admins[0];
 
-        // Ensure user record exists and exact email matches
         if (!admin || !admin.email || admin.email.toLowerCase() !== email.toLowerCase()) {
           return res.status(401).json({ error: 'Invalid email or password.' });
         }
@@ -279,7 +310,6 @@ app.post(
 
       const student = students[0];
 
-      // Ensure exact email match
       if (!student || !student.email || student.email.toLowerCase() !== email.toLowerCase()) {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
@@ -432,7 +462,6 @@ app.post(
 // ADMIN STUDENT MANAGEMENT ROUTES (Admins Only)
 // -----------------------------------------------------------------------------
 
-// GET all students
 app.get('/api/admin/students', authenticateToken, async (req, res) => {
   if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
@@ -447,7 +476,6 @@ app.get('/api/admin/students', authenticateToken, async (req, res) => {
   }
 });
 
-// UPDATE a student record
 app.put(
   '/api/admin/students/:id',
   authenticateToken,
@@ -480,7 +508,6 @@ app.put(
   }
 );
 
-// DELETE a student record
 app.delete(
   '/api/admin/students/:id',
   authenticateToken,
