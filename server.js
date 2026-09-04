@@ -51,11 +51,7 @@ const queryDb = (text, params = []) => {
       const pgText = text.replace(/\?/g, () => `$${paramIndex++}`);
       
       db.query(pgText, params)
-        .then((res) => {
-          if (Array.isArray(res)) return resolve(res);
-          if (res && Array.isArray(res.rows)) return resolve(res.rows);
-          resolve([]);
-        })
+        .then((res) => resolve(res.rows || res))
         .catch((err) => reject(err));
     } else if (typeof db.all === 'function') {
       // SQLite driver
@@ -63,7 +59,7 @@ const queryDb = (text, params = []) => {
       if (isSelect) {
         db.all(text, params, (err, rows) => {
           if (err) return reject(err);
-          resolve(Array.isArray(rows) ? rows : []);
+          resolve(rows);
         });
       } else {
         db.run(text, params, function (err) {
@@ -239,11 +235,9 @@ app.post(
       if (role === 'admin') {
         const admins = await queryDb('SELECT * FROM admins WHERE LOWER(email) = LOWER(?)', [email]);
         
-        const hasAdmins = Array.isArray(admins) && admins.length > 0;
-
-        if (!hasAdmins) {
-          // Fallback check ONLY matches if the submitted email AND password match the emergency credential
-          if (email.toLowerCase() === 'admin@jombatech.com' && password === 'admin123') {
+        if (!Array.isArray(admins) || admins.length === 0) {
+          // Fallback check for emergency hardcoded admin credentials if DB table is empty
+          if (email === 'admin@jombatech.com' && password === 'admin123') {
             const adminUser = { id: 1, fullName: 'System Administrator', email, role: 'admin' };
             const token = generateAuthToken(adminUser);
             res.cookie('token', token, { httpOnly: true, secure: IS_PRODUCTION, sameSite: 'lax', maxAge: 7200000 });
@@ -254,8 +248,8 @@ app.post(
 
         const admin = admins[0];
 
-        // Ensure user record exists and exact email matches
-        if (!admin || !admin.email || admin.email.toLowerCase() !== email.toLowerCase()) {
+        // Strict verification that retrieved record strictly matches supplied email
+        if (!admin.email || admin.email.toLowerCase() !== email.toLowerCase()) {
           return res.status(401).json({ error: 'Invalid email or password.' });
         }
 
@@ -278,8 +272,8 @@ app.post(
 
       const student = students[0];
 
-      // Ensure exact email match
-      if (!student || !student.email || student.email.toLowerCase() !== email.toLowerCase()) {
+      // Strict verification that retrieved record strictly matches supplied email
+      if (!student.email || student.email.toLowerCase() !== email.toLowerCase()) {
         return res.status(401).json({ error: 'Invalid email or password.' });
       }
 
