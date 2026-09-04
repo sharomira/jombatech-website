@@ -1,5 +1,7 @@
+let allResources = [];
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Check active student session on load
+  // Check active student session from localStorage
   const userSession = localStorage.getItem('active_user');
   
   if (!userSession) {
@@ -14,25 +16,113 @@ document.addEventListener('DOMContentLoaded', () => {
   if (welcomeTitle && user.fullName) {
     welcomeTitle.textContent = `Welcome, ${user.fullName.split(' ')[0]}`;
   }
+
+  // Fetch dynamic resources from backend API
+  fetchResources();
 });
+
+// Fetch resources uploaded by admin from Express server
+async function fetchResources() {
+  const container = document.getElementById('resources-grid');
+
+  try {
+    const response = await fetch('/api/student/resources', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include' // Transmits httpOnly session cookies
+    });
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        alert('Your session has expired. Please log in again.');
+        window.location.href = 'login.html';
+        return;
+      }
+      throw new Error('Failed to fetch resources.');
+    }
+
+    allResources = await response.json();
+    renderResources(allResources);
+
+  } catch (error) {
+    console.error('Error fetching resources:', error);
+    if (container) {
+      container.innerHTML = `<p style="text-align: center; color: #ff4d4d; grid-column: 1/-1;">Error loading study materials. Please refresh or log in again.</p>`;
+    }
+  }
+}
+
+// Render dynamic resource cards into grid
+function renderResources(resources) {
+  const container = document.getElementById('resources-grid');
+  if (!container) return;
+
+  if (!resources || resources.length === 0) {
+    container.innerHTML = `<p style="text-align: center; color: #94a3b8; grid-column: 1/-1;">No study resources available yet.</p>`;
+    return;
+  }
+
+  container.innerHTML = resources.map(item => {
+    // Map database course name to category for filtering
+    const courseLower = (item.course || '').toLowerCase();
+    let category = 'all';
+    
+    if (courseLower.includes('computer')) {
+      category = 'computer';
+    } else if (courseLower.includes('repair') || courseLower.includes('electronics')) {
+      category = 'repair';
+    } else if (courseLower.includes('exam')) {
+      category = 'exams';
+    }
+
+    // Set badge style depending on category
+    let badgeClass = 'badge-blue';
+    if (category === 'repair') badgeClass = 'badge-cyan';
+    if (category === 'exams') badgeClass = 'badge-amber';
+
+    return `
+      <div class="resource-card" data-category="${category}">
+        <div class="card-badge ${badgeClass}">${escapeHtml(item.course || 'Resource')}</div>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>Official study material provided for ${escapeHtml(item.course)} students.</p>
+        <div class="card-meta">Access: Free Download</div>
+        <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
+      </div>
+    `;
+  }).join('');
+}
 
 // Category filtering function
 function filterCategory(category) {
-  // Update Tab States
+  // Update Tab Active States
   const tabs = document.querySelectorAll('.tab-btn');
   tabs.forEach(tab => tab.classList.remove('active'));
 
   const activeTab = document.getElementById(`tab-${category}`);
   if (activeTab) activeTab.classList.add('active');
 
-  // Filter Grid Cards
-  const cards = document.querySelectorAll('.resource-card');
-  cards.forEach(card => {
-    if (category === 'all' || card.dataset.category === category) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
+  // Filter dynamic resources
+  if (category === 'all') {
+    renderResources(allResources);
+    return;
+  }
+
+  const filtered = allResources.filter(item => {
+    const courseLower = (item.course || '').toLowerCase();
+    if (category === 'computer') return courseLower.includes('computer');
+    if (category === 'repair') return courseLower.includes('repair') || courseLower.includes('electronics');
+    if (category === 'exams') return courseLower.includes('exam');
+    return true;
+  });
+
+  renderResources(filtered);
+}
+
+// Security Helper to prevent HTML injection/XSS
+function escapeHtml(str) {
+  return String(str || '').replace(/[&<>"']/g, match => {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return map[match];
   });
 }
 
@@ -40,6 +130,7 @@ function filterCategory(category) {
 function handleLogout() {
   localStorage.removeItem('active_user');
   localStorage.removeItem('token');
+  document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   alert('Logged out successfully.');
   window.location.href = 'login.html';
 }

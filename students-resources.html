@@ -25,7 +25,7 @@
 
     <nav class="nav-links">
       <a href="dashboard.html">Home</a>
-      <a href="student-resources.html" class="active-link">Resources</a>
+      <a href="/students-resources" class="active-link">Resources</a>
       <a href="computer class.html">Computer Class</a>
       <a href="repair class.html">Repair Class</a>
       <button type="button" class="logout-btn" onclick="handleLogout()">Logout</button>
@@ -50,45 +50,9 @@
         <button class="tab-btn" id="tab-exams" onclick="filterCategory('exams')">Exam Questions</button>
       </div>
 
-      <!-- Resources Grid -->
+      <!-- Resources Grid (Dynamically Populated via JS) -->
       <div class="resources-grid" id="resources-grid">
-        
-        <!-- Computer Packages Note -->
-        <div class="resource-card" data-category="computer">
-          <div class="card-badge badge-blue">Notes</div>
-          <h3>Microsoft Word & Excel Essentials</h3>
-          <p>Comprehensive guide on document formatting, formulas, tables, and shortcut keys.</p>
-          <div class="card-meta">Format: PDF | Size: 2.4 MB</div>
-          <a href="/downloads/ms-office-guide.pdf" class="download-btn" download>Download Notes</a>
-        </div>
-
-        <!-- Electronics Note -->
-        <div class="resource-card" data-category="repair">
-          <div class="card-badge badge-cyan">Notes</div>
-          <h3>Motherboard Diagnostics & Soldering</h3>
-          <p>Component identification, multimeter testing procedures, and basic circuit repairs.</p>
-          <div class="card-meta">Format: PDF | Size: 4.1 MB</div>
-          <a href="/downloads/motherboard-repair-guide.pdf" class="download-btn" download>Download Notes</a>
-        </div>
-
-        <!-- Exam Paper -->
-        <div class="resource-card" data-category="exams">
-          <div class="card-badge badge-amber">Exam Paper</div>
-          <h3>Computer Packages Revision Questions 2026</h3>
-          <p>Past theory exam papers and practical task prompts covering Word, Excel, and PowerPoint.</p>
-          <div class="card-meta">Format: PDF | Size: 1.8 MB</div>
-          <a href="/downloads/computer-packages-pastpaper.pdf" class="download-btn" download>Download Exam</a>
-        </div>
-
-        <!-- Exam Paper -->
-        <div class="resource-card" data-category="exams">
-          <div class="card-badge badge-amber">Exam Paper</div>
-          <h3>Hardware & Troubleshooting Practice Test</h3>
-          <p>Sample questions on fault tracing, CMOS battery replacement, and power rail diagnostics.</p>
-          <div class="card-meta">Format: PDF | Size: 1.2 MB</div>
-          <a href="/downloads/hardware-repair-pastpaper.pdf" class="download-btn" download>Download Exam</a>
-        </div>
-
+        <p style="text-align: center; color: #94a3b8; grid-column: 1/-1;">Loading resources...</p>
       </div>
 
     </div>
