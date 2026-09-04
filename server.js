@@ -7,6 +7,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const fs = require('fs');
 const { body, param, validationResult } = require('express-validator');
 const db = require('./db');
 
@@ -17,6 +19,29 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // Trust reverse proxy for Render deployment
 app.set('trust proxy', 1);
 
+// Ensure uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Multer Storage Configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 25 * 1024 * 1024 } // 25MB file size limit
+});
+
 // Security Headers
 // Ensure helmet allows search engines to index your site
 app.use(
@@ -24,7 +49,7 @@ app.use(
     contentSecurityPolicy: false, // Prevents blocking external assets or inline scripts if needed
     crossOriginResourcePolicy: { policy: "cross-origin" }
   })
-);
+)
 
 // -----------------------------------------------------------------------------
 // MIDDLEWARES (ORDER IS CRITICAL: MUST BE PLACED BEFORE ALL ROUTE HANDLERS)
@@ -37,10 +62,13 @@ app.use(cookieParser()); // Enables req.cookies for authenticateToken middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Serve static assets and uploaded files
+app.use('/uploads', express.static(uploadsDir));
+app.use(express.static(__dirname));
+
 // EJS Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-app.use(express.static(__dirname));
 
 // -----------------------------------------------------------------------------
 // HELPER: DATABASE QUERY PROMISIFIER (Supports both SQLite & PostgreSQL)
@@ -151,7 +179,7 @@ app.get('/students-resources', (req, res) => {
 });
 
 // -----------------------------------------------------------------------------
-// STEP 3: SEO ROUTES (ROBOTS.TXT & SITEMAP.XML)
+// SEO ROUTES (ROBOTS.TXT & SITEMAP.XML)
 // -----------------------------------------------------------------------------
 
 app.get('/robots.txt', (req, res) => {
@@ -434,21 +462,32 @@ app.post(
   }
 );
 
+// POST /admin/add-resource (Supports File Upload or External URL)
 app.post(
   '/admin/add-resource',
   authenticateToken,
+  upload.single('resourceFile'),
   [
     body('title').trim().notEmpty().withMessage('Resource title is required.').escape(),
-    body('course').trim().notEmpty().withMessage('Course is required.').escape(),
-    body('fileUrl').trim().notEmpty().withMessage('File URL is required.').isURL().withMessage('Must be a valid URL.')
+    body('course').trim().notEmpty().withMessage('Course is required.').escape()
   ],
   validateRequest,
   async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { title, course, fileUrl } = req.body;
+    let finalFileUrl = fileUrl ? fileUrl.trim() : '';
+
+    if (req.file) {
+      finalFileUrl = `/uploads/${req.file.filename}`;
+    }
+
+    if (!finalFileUrl) {
+      return res.status(400).send('Please upload a file or provide a valid file URL.');
+    }
+
     try {
-      await queryDb('INSERT INTO resources (title, course, file_url) VALUES (?, ?, ?)', [title, course, fileUrl]);
+      await queryDb('INSERT INTO resources (title, course, file_url) VALUES (?, ?, ?)', [title, course, finalFileUrl]);
       res.redirect('/admin');
     } catch (err) {
       console.error('Error adding resource:', err.message);

@@ -47,6 +47,29 @@
       cursor: pointer; 
     }
 
+    /* Drag & Drop Upload Zone */
+    .drop-zone {
+      border: 2px dashed #2ee0df;
+      padding: 24px;
+      text-align: center;
+      border-radius: 6px;
+      background: #050b14;
+      cursor: pointer;
+      margin: 6px 0 16px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      background: #0d223f;
+      border-color: #ffaa00;
+    }
+
+    .drop-zone-text {
+      margin: 0;
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
     .table-responsive {
       width: 100%;
       overflow-x: auto;
@@ -216,16 +239,23 @@
   <!-- SECTION 3: STUDY RESOURCES MANAGEMENT -->
   <div class="card-form">
     <h3>Upload Study Resource</h3>
-    <p style="color: #94a3b8; font-size: 0.9rem;">Add notes, guides, or course materials for students to download.</p>
-    <form action="/admin/add-resource" method="POST">
+    <p style="color: #94a3b8; font-size: 0.9rem;">Drag and drop a file, choose a local file from your PC, or paste an external URL link.</p>
+    
+    <form action="/admin/add-resource" method="POST" enctype="multipart/form-data">
       <label>Resource Title:</label>
       <input type="text" name="title" placeholder="e.g. Computer Packages Practical Notes" required>
 
       <label>Associated Course:</label>
       <input type="text" name="course" placeholder="e.g. Computer Packages" required>
 
-      <label>Resource File Link / URL:</label>
-      <input type="url" name="fileUrl" placeholder="https://drive.google.com/... or direct PDF link" required>
+      <label>Upload File (PDF, Word, Images, Zip):</label>
+      <div id="dropZone" class="drop-zone">
+        <p class="drop-zone-text" id="dropZoneText">📁 Drag & Drop your file here, or click to browse</p>
+        <input type="file" id="fileInput" name="resourceFile" style="display: none;">
+      </div>
+
+      <label>Or External File Link / URL (Optional if file uploaded above):</label>
+      <input type="text" name="fileUrl" placeholder="https://drive.google.com/...">
 
       <button type="submit">Upload Resource</button>
     </form>
@@ -294,6 +324,45 @@
   </div>
 
   <script>
+    // Drag and Drop File Upload Logic
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const dropZoneText = document.getElementById('dropZoneText');
+
+    if (dropZone && fileInput) {
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+          dropZoneText.textContent = `📄 Selected File: ${fileInput.files[0].name}`;
+          dropZone.style.borderColor = '#ffaa00';
+        }
+      });
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropZone.classList.add('dragover');
+        }, false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropZone.classList.remove('dragover');
+        }, false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          fileInput.files = files;
+          dropZoneText.textContent = `📄 Selected File: ${files[0].name}`;
+          dropZone.style.borderColor = '#ffaa00';
+        }
+      });
+    }
+
     // Load and Populate Students List safely
     async function fetchStudents() {
       const tbody = document.getElementById('studentsTableBody');
