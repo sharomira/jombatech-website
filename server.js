@@ -18,12 +18,13 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 app.set('trust proxy', 1);
 
 // Security Headers
+// Ensure helmet allows search engines to index your site
 app.use(
   helmet({
-    contentSecurityPolicy: false
+    contentSecurityPolicy: false, // Prevents blocking external assets or inline scripts if needed
+    crossOriginResourcePolicy: { policy: "cross-origin" }
   })
 );
-
 // -----------------------------------------------------------------------------
 // MIDDLEWARES (ORDER IS CRITICAL: MUST BE PLACED BEFORE ALL ROUTE HANDLERS)
 // -----------------------------------------------------------------------------
