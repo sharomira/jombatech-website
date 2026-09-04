@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
+
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
