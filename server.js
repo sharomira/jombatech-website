@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const cors = require('cors');
 const bcrypt = require('bcryptjs'); // Updated to bcryptjs for faster Render deployments
 const helmet = require('helmet');
@@ -8,8 +9,6 @@ const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const { body, param, validationResult } = require('express-validator');
 const db = require('./db');
 
@@ -20,19 +19,21 @@ const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 // Trust reverse proxy for Render deployment
 app.set('trust proxy', 1);
 
-// Configure Cloudinary Credentials
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
+// Ensure local uploads directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-// Multer Storage Configuration for Cloudinary
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'jombatech_resources',
-    resource_type: 'auto' // Supports PDFs, Word docs, images, HTML files, etc.
+// Multer Storage Configuration for Local Disk Storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   }
 });
 
@@ -60,8 +61,9 @@ app.use(cookieParser()); // Enables req.cookies for authenticateToken middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets
+// Serve static assets and uploaded files
 app.use(express.static(__dirname));
+app.use('/uploads', express.static(uploadsDir));
 
 // EJS Setup
 app.set('view engine', 'ejs');
@@ -459,7 +461,7 @@ app.post(
   }
 );
 
-// POST /admin/add-resource (Uploads directly to Cloudinary or accepts external URL)
+// POST /admin/add-resource (Uploads to local /uploads directory or accepts external URL)
 app.post(
   '/admin/add-resource',
   authenticateToken,
@@ -475,9 +477,9 @@ app.post(
     const { title, course, fileUrl } = req.body;
     let finalFileUrl = fileUrl ? fileUrl.trim() : '';
 
-    // If file uploaded to Cloudinary, use generated HTTPS URL
-    if (req.file && req.file.path) {
-      finalFileUrl = req.file.path;
+    // If file uploaded locally, build public path relative to server root
+    if (req.file) {
+      finalFileUrl = `/uploads/${req.file.filename}`;
     }
 
     if (!finalFileUrl) {

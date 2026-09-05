@@ -52,6 +52,19 @@ async function fetchResources() {
   }
 }
 
+// Helper to sanitize file paths for local uploads vs external URLs
+function getDownloadUrl(fileUrl) {
+  if (!fileUrl) return '#';
+  
+  // If it's already a full absolute HTTP/HTTPS URL, return as is
+  if (fileUrl.startsWith('http://') || fileUrl.startsWith('https://')) {
+    return fileUrl;
+  }
+  
+  // Ensure local upload paths start with a leading slash
+  return fileUrl.startsWith('/') ? fileUrl : `/${fileUrl}`;
+}
+
 // Render dynamic resource cards into grid
 function renderResources(resources) {
   const container = document.getElementById('resources-grid');
@@ -80,13 +93,15 @@ function renderResources(resources) {
     if (category === 'repair') badgeClass = 'badge-cyan';
     if (category === 'exams') badgeClass = 'badge-amber';
 
+    const downloadPath = getDownloadUrl(item.file_url);
+
     return `
       <div class="resource-card" data-category="${category}">
         <div class="card-badge ${badgeClass}">${escapeHtml(item.course || 'Resource')}</div>
         <h3>${escapeHtml(item.title)}</h3>
         <p>Official study material provided for ${escapeHtml(item.course)} students.</p>
         <div class="card-meta">Access: Free Download</div>
-        <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
+        <a href="${downloadPath}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
       </div>
     `;
   }).join('');

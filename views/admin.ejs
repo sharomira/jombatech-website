@@ -186,7 +186,7 @@
       <input type="number" step="0.01" min="0" name="price" placeholder="e.g. 32000" required>
 
       <label>Image Filename or URL:</label>
-      <input type="url" name="image" placeholder="https://example.com/image.jpg" required>
+      <input type="text" name="image" placeholder="https://example.com/image.jpg" required>
 
       <button type="submit">Save Product</button>
     </form>
@@ -255,7 +255,7 @@
       </div>
 
       <label>Or External File Link / URL (Optional if file uploaded above):</label>
-      <input type="text" name="fileUrl" placeholder="https://drive.google.com/...">
+      <input type="url" name="fileUrl" placeholder="https://drive.google.com/...">
 
       <button type="submit">Upload Resource</button>
     </form>
@@ -313,7 +313,7 @@
         <input type="number" step="0.01" min="0" id="editPrice" name="price" required>
 
         <label>Image URL:</label>
-        <input type="url" id="editImage" name="image" required>
+        <input type="text" id="editImage" name="image" required>
 
         <div class="modal-actions">
           <button type="submit">Update Product</button>
@@ -372,7 +372,7 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          credentials: 'include' // Sends httpOnly authentication cookie
+          credentials: 'include'
         });
 
         if (!response.ok) {
@@ -430,7 +430,7 @@
         const response = await fetch(`/api/admin/students/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          credentials: 'include', // Sends httpOnly authentication cookie
+          credentials: 'include',
           body: JSON.stringify(payload)
         });
 
@@ -452,7 +452,7 @@
       try {
         const response = await fetch(`/api/admin/students/${id}`, { 
           method: 'DELETE',
-          credentials: 'include' // Sends httpOnly authentication cookie
+          credentials: 'include'
         });
 
         const data = await response.json();
