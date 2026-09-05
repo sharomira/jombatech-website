@@ -1,7 +1,7 @@
 let allResources = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Check active student session from localStorage with error safety
+  // Check active student session from localStorage
   const userSession = localStorage.getItem('active_user');
   
   if (!userSession) {
@@ -10,15 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  let user = {};
-  try {
-    user = JSON.parse(userSession) || {};
-  } catch (e) {
-    localStorage.removeItem('active_user');
-    window.location.href = 'login.html';
-    return;
-  }
-
+  const user = JSON.parse(userSession);
   const welcomeTitle = document.getElementById('welcome-title');
   
   if (welcomeTitle && user.fullName) {
@@ -32,15 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch resources uploaded by admin from Express server
 async function fetchResources() {
   const container = document.getElementById('resources-grid');
-  const token = localStorage.getItem('token');
 
   try {
     const response = await fetch('/api/student/resources', {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-      },
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'include' // Transmits httpOnly session cookies
     });
 
@@ -92,24 +80,13 @@ function renderResources(resources) {
     if (category === 'repair') badgeClass = 'badge-cyan';
     if (category === 'exams') badgeClass = 'badge-amber';
 
-    // Format download URL for Cloudinary CDN or local static server uploads
-    let downloadUrl = item.file_url || '#';
-    
-    if (downloadUrl.includes('res.cloudinary.com')) {
-      if (!downloadUrl.includes('fl_attachment')) {
-        downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
-      }
-    } else if (downloadUrl.startsWith('/uploads') || downloadUrl.startsWith('uploads')) {
-      downloadUrl = downloadUrl.startsWith('/') ? downloadUrl : '/' + downloadUrl;
-    }
-
     return `
       <div class="resource-card" data-category="${category}">
         <div class="card-badge ${badgeClass}">${escapeHtml(item.course || 'Resource')}</div>
         <h3>${escapeHtml(item.title)}</h3>
         <p>Official study material provided for ${escapeHtml(item.course)} students.</p>
-        <div class="card-meta">Access: Direct Download</div>
-        <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
+        <div class="card-meta">Access: Free Download</div>
+        <a href="${item.file_url}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
       </div>
     `;
   }).join('');
