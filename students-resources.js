@@ -92,10 +92,15 @@ function renderResources(resources) {
     if (category === 'repair') badgeClass = 'badge-cyan';
     if (category === 'exams') badgeClass = 'badge-amber';
 
-    // FIX: Modify Cloudinary URL to force attachment download disposition
+    // Format download URL for Cloudinary CDN or local static server uploads
     let downloadUrl = item.file_url || '#';
-    if (downloadUrl.includes('res.cloudinary.com') && !downloadUrl.includes('fl_attachment')) {
-      downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
+    
+    if (downloadUrl.includes('res.cloudinary.com')) {
+      if (!downloadUrl.includes('fl_attachment')) {
+        downloadUrl = downloadUrl.replace('/upload/', '/upload/fl_attachment/');
+      }
+    } else if (downloadUrl.startsWith('/uploads') || downloadUrl.startsWith('uploads')) {
+      downloadUrl = downloadUrl.startsWith('/') ? downloadUrl : '/' + downloadUrl;
     }
 
     return `
@@ -104,7 +109,7 @@ function renderResources(resources) {
         <h3>${escapeHtml(item.title)}</h3>
         <p>Official study material provided for ${escapeHtml(item.course)} students.</p>
         <div class="card-meta">Access: Direct Download</div>
-        <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn">Download File</a>
+        <a href="${downloadUrl}" target="_blank" rel="noopener noreferrer" class="download-btn" download>Download File</a>
       </div>
     `;
   }).join('');

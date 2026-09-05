@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const bcrypt = require('bcryptjs'); // Updated to bcryptjs for faster Render deployments
+const bcrypt = require('bcryptjs'); // Faster bcrypt library for Render deployments
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const jwt = require('jsonwebtoken');
@@ -42,9 +42,13 @@ cloudinary.config({
 // Multer Storage Configuration for Cloudinary
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'jombatech_resources',
-    resource_type: 'auto' // Supports PDFs, Word docs, images, HTML files, etc.
+  params: async (req, file) => {
+    return {
+      folder: 'jombatech_resources',
+      resource_type: 'auto', // Supports PDFs, Word docs, images, ZIP files, etc.
+      type: 'upload',        // Publicly readable storage access
+      flags: 'attachment'   // Instructs Cloudinary to output download attachment headers
+    };
   }
 });
 
@@ -72,8 +76,9 @@ app.use(cookieParser()); // Enables req.cookies for authenticateToken middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets
+// Serve static assets from project root and uploaded files folder
 app.use(express.static(__dirname));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // EJS Setup
 app.set('view engine', 'ejs');
@@ -122,7 +127,7 @@ const queryDb = (text, params = []) => {
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 10,
   message: { error: 'Too many authentication attempts. Please try again after 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false
@@ -223,10 +228,10 @@ app.post(
   '/api/register',
   registerLimiter,
   [
-    body('fullName').trim().notEmpty().withMessage('Full name is required.').escape(),
+    body('fullName').trim().notEmpty().withMessage('Full name is required.'),
     body('email').trim().isEmail().withMessage('Please provide a valid email address.').normalizeEmail(),
-    body('phone').trim().notEmpty().withMessage('Phone number is required.').escape(),
-    body('course').trim().notEmpty().withMessage('Course selection is required.').escape(),
+    body('phone').trim().notEmpty().withMessage('Phone number is required.'),
+    body('course').trim().notEmpty().withMessage('Course selection is required.'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.')
   ],
   validateRequest,
@@ -265,7 +270,7 @@ app.post(
   '/api/admin/register',
   registerLimiter,
   [
-    body('fullName').trim().notEmpty().withMessage('Full name is required.').escape(),
+    body('fullName').trim().notEmpty().withMessage('Full name is required.'),
     body('email').trim().isEmail().withMessage('Valid email required.').normalizeEmail(),
     body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.'),
     body('adminSecret').notEmpty().withMessage('Admin secret key is required.')
@@ -306,7 +311,7 @@ app.post(
   [
     body('email').trim().isEmail().withMessage('Please provide a valid email address.').normalizeEmail(),
     body('password').notEmpty().withMessage('Password is required.'),
-    body('role').optional().trim().escape()
+    body('role').optional().trim()
   ],
   validateRequest,
   async (req, res) => {
@@ -316,7 +321,6 @@ app.post(
       // ADMIN LOGIN HANDLER
       if (role === 'admin') {
         const admins = await queryDb('SELECT * FROM admins WHERE LOWER(email) = LOWER(?)', [email]);
-        
         const hasAdmins = Array.isArray(admins) && admins.length > 0;
 
         if (!hasAdmins) {
@@ -380,7 +384,7 @@ app.post(
   authLimiter,
   [
     body('email').trim().isEmail().withMessage('Please provide a valid email address.').normalizeEmail(),
-    body('phone').trim().notEmpty().withMessage('Phone number is required.').escape(),
+    body('phone').trim().notEmpty().withMessage('Phone number is required.'),
     body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long.')
   ],
   validateRequest,
@@ -419,7 +423,7 @@ app.get('/api/student/resources', authenticateToken, async (req, res) => {
 });
 
 // -----------------------------------------------------------------------------
-// SHOP & ADMIN PRODUCTS ROUTES
+// SHOP & ADMIN PRODUCTS / RESOURCES ROUTES
 // -----------------------------------------------------------------------------
 
 app.get('/api/products', async (req, res) => {
@@ -451,8 +455,8 @@ app.post(
   '/admin/add-product',
   authenticateToken,
   [
-    body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
-    body('category').trim().notEmpty().withMessage('Category is required.').escape(),
+    body('title').trim().notEmpty().withMessage('Product title is required.'),
+    body('category').trim().notEmpty().withMessage('Category is required.'),
     body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.'),
     body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
   ],
@@ -477,8 +481,8 @@ app.post(
   authenticateToken,
   upload.single('resourceFile'),
   [
-    body('title').trim().notEmpty().withMessage('Resource title is required.').escape(),
-    body('course').trim().notEmpty().withMessage('Course is required.').escape()
+    body('title').trim().notEmpty().withMessage('Resource title is required.'),
+    body('course').trim().notEmpty().withMessage('Course is required.')
   ],
   validateRequest,
   async (req, res) => {
@@ -506,13 +510,33 @@ app.post(
   }
 );
 
+// POST /admin/delete-resource/:id
+app.post(
+  '/admin/delete-resource/:id',
+  authenticateToken,
+  [param('id').isInt().withMessage('Resource ID must be an integer.')],
+  validateRequest,
+  async (req, res) => {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
+
+    const { id } = req.params;
+    try {
+      await queryDb('DELETE FROM resources WHERE id = ?', [id]);
+      res.redirect('/admin');
+    } catch (err) {
+      console.error('Error deleting resource:', err.message);
+      res.status(500).send('Failed to delete resource.');
+    }
+  }
+);
+
 app.post(
   '/admin/update-product/:id',
   authenticateToken,
   [
     param('id').isInt().withMessage('Product ID must be an integer.'),
-    body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
-    body('category').trim().notEmpty().withMessage('Category is required.').escape(),
+    body('title').trim().notEmpty().withMessage('Product title is required.'),
+    body('category').trim().notEmpty().withMessage('Category is required.'),
     body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.'),
     body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
   ],
@@ -575,10 +599,10 @@ app.put(
   authenticateToken,
   [
     param('id').isInt().withMessage('Student ID must be an integer.'),
-    body('fullName').trim().notEmpty().withMessage('Full name required.').escape(),
+    body('fullName').trim().notEmpty().withMessage('Full name required.'),
     body('email').trim().isEmail().withMessage('Valid email required.').normalizeEmail(),
-    body('phone').trim().notEmpty().withMessage('Phone required.').escape(),
-    body('course').trim().notEmpty().withMessage('Course required.').escape()
+    body('phone').trim().notEmpty().withMessage('Phone required.'),
+    body('course').trim().notEmpty().withMessage('Course required.')
   ],
   validateRequest,
   async (req, res) => {
