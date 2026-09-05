@@ -437,22 +437,33 @@ app.get('/admin', authenticateToken, async (req, res) => {
   }
 });
 
+// ADD PRODUCT (Supports local disk upload via multer OR standard relative image path input)
 app.post(
   '/admin/add-product',
   authenticateToken,
+  upload.single('productImage'),
   [
     body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
     body('category').trim().notEmpty().withMessage('Category is required.').escape(),
-    body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.'),
-    body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
+    body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.')
   ],
   validateRequest,
   async (req, res) => {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { title, category, price, image } = req.body;
+    let finalImagePath = image ? image.trim() : '';
+
+    if (req.file) {
+      finalImagePath = `/uploads/${req.file.filename}`;
+    }
+
+    if (!finalImagePath) {
+      return res.status(400).send('Please provide an image filename/URL or upload an image file.');
+    }
+
     try {
-      await queryDb('INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)', [title, category, price, image]);
+      await queryDb('INSERT INTO products (title, category, price, image) VALUES (?, ?, ?, ?)', [title, category, price, finalImagePath]);
       res.redirect('/admin');
     } catch (err) {
       console.error('Error inserting product:', err.message);
@@ -477,7 +488,6 @@ app.post(
     const { title, course, fileUrl } = req.body;
     let finalFileUrl = fileUrl ? fileUrl.trim() : '';
 
-    // If file uploaded locally, build public path relative to server root
     if (req.file) {
       finalFileUrl = `/uploads/${req.file.filename}`;
     }
@@ -496,15 +506,16 @@ app.post(
   }
 );
 
+// UPDATE PRODUCT
 app.post(
   '/admin/update-product/:id',
   authenticateToken,
+  upload.single('productImage'),
   [
     param('id').isInt().withMessage('Product ID must be an integer.'),
     body('title').trim().notEmpty().withMessage('Product title is required.').escape(),
     body('category').trim().notEmpty().withMessage('Category is required.').escape(),
-    body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.'),
-    body('image').trim().notEmpty().withMessage('Image URL is required.').isURL().withMessage('Must be a valid URL.')
+    body('price').isFloat({ min: 0 }).withMessage('Price must be a valid positive number.')
   ],
   validateRequest,
   async (req, res) => {
@@ -512,9 +523,18 @@ app.post(
 
     const { id } = req.params;
     const { title, category, price, image } = req.body;
+    let finalImagePath = image ? image.trim() : '';
+
+    if (req.file) {
+      finalImagePath = `/uploads/${req.file.filename}`;
+    }
+
+    if (!finalImagePath) {
+      return res.status(400).send('Please provide an image filename/URL or upload an image file.');
+    }
 
     try {
-      await queryDb('UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?', [title, category, price, image, id]);
+      await queryDb('UPDATE products SET title = ?, category = ?, price = ?, image = ? WHERE id = ?', [title, category, price, finalImagePath, id]);
       res.redirect('/admin');
     } catch (err) {
       console.error('Error updating product:', err.message);
@@ -523,6 +543,7 @@ app.post(
   }
 );
 
+// DELETE PRODUCT
 app.post(
   '/admin/delete-product/:id',
   authenticateToken,

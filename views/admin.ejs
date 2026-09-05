@@ -112,6 +112,8 @@
       width: 90%; 
       max-width: 500px; 
       box-sizing: border-box;
+      max-height: 85vh;
+      overflow-y: auto;
     }
 
     .modal-actions {
@@ -132,7 +134,7 @@
       }
 
       .modal-content {
-        margin: 20% auto;
+        margin: 10% auto;
       }
     }
   </style>
@@ -170,7 +172,7 @@
   <!-- SECTION 2: PRODUCT MANAGEMENT -->
   <div class="card-form">
     <h3>Add New Product</h3>
-    <form action="/admin/add-product" method="POST">
+    <form action="/admin/add-product" method="POST" enctype="multipart/form-data">
       <label>Title:</label>
       <input type="text" name="title" placeholder="e.g. HP EliteBook 840 G3" required>
 
@@ -185,8 +187,14 @@
       <label>Price (Numeric value only):</label>
       <input type="number" step="0.01" min="0" name="price" placeholder="e.g. 32000" required>
 
-      <label>Image Filename or URL:</label>
-      <input type="text" name="image" placeholder="https://example.com/image.jpg" required>
+      <label>Upload Product Image (File Upload):</label>
+      <div id="productDropZone" class="drop-zone">
+        <p class="drop-zone-text" id="productDropZoneText">📷 Drag & Drop image here, or click to select</p>
+        <input type="file" id="productFileInput" name="productImage" accept="image/*" style="display: none;">
+      </div>
+
+      <label>Or Image Filename / Relative Path / External URL (Optional if file uploaded above):</label>
+      <input type="text" name="image" placeholder="e.g. hp external battery.jpg or https://example.com/image.jpg">
 
       <button type="submit">Save Product</button>
     </form>
@@ -297,7 +305,7 @@
   <div id="editModal" class="modal">
     <div class="modal-content">
       <h3>Edit Product</h3>
-      <form id="editForm" method="POST">
+      <form id="editForm" method="POST" enctype="multipart/form-data">
         <label>Title:</label>
         <input type="text" id="editTitle" name="title" required>
 
@@ -312,8 +320,11 @@
         <label>Price:</label>
         <input type="number" step="0.01" min="0" id="editPrice" name="price" required>
 
-        <label>Image URL:</label>
-        <input type="text" id="editImage" name="image" required>
+        <label>Upload New Product Image File (Optional):</label>
+        <input type="file" name="productImage" accept="image/*">
+
+        <label>Or Existing Filename / Path / URL:</label>
+        <input type="text" id="editImage" name="image">
 
         <div class="modal-actions">
           <button type="submit">Update Product</button>
@@ -324,12 +335,14 @@
   </div>
 
   <script>
-    // Drag and Drop File Upload Logic
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const dropZoneText = document.getElementById('dropZoneText');
+    // Universal helper function for drag & drop zones
+    function initDropZone(zoneId, inputId, textId) {
+      const dropZone = document.getElementById(zoneId);
+      const fileInput = document.getElementById(inputId);
+      const dropZoneText = document.getElementById(textId);
 
-    if (dropZone && fileInput) {
+      if (!dropZone || !fileInput) return;
+
       dropZone.addEventListener('click', () => fileInput.click());
 
       fileInput.addEventListener('change', () => {
@@ -362,6 +375,10 @@
         }
       });
     }
+
+    // Initialize Drop Zones for both Study Resources and Add Product forms
+    initDropZone('dropZone', 'fileInput', 'dropZoneText');
+    initDropZone('productDropZone', 'productFileInput', 'productDropZoneText');
 
     // Load and Populate Students List safely
     async function fetchStudents() {
