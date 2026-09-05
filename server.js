@@ -43,11 +43,14 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
+    const ext = (file.originalname.split('.').pop() || '').toLowerCase();
+    const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'].includes(ext);
+
     return {
       folder: 'jombatech_resources',
-      resource_type: 'auto', // Supports PDFs, Word docs, images, ZIP files, etc.
-      type: 'upload',        // Publicly readable storage access
-      flags: 'attachment'   // Instructs Cloudinary to output download attachment headers
+      // Force 'raw' for non-images (PDF, HTML, DOCX, ZIP) to ensure instant upload without Cloudinary image processing freezes
+      resource_type: isImage ? 'image' : 'raw',
+      public_id: `${Date.now()}-${file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_')}`
     };
   }
 });
@@ -489,11 +492,13 @@ app.post(
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin access required.' });
 
     const { title, course, fileUrl } = req.body;
-    let finalFileUrl = fileUrl ? fileUrl.trim() : '';
+    let finalFileUrl = '';
 
-    // If file uploaded to Cloudinary, use generated HTTPS URL
-    if (req.file && req.file.path) {
-      finalFileUrl = req.file.path;
+    // Prioritize Cloudinary HTTPS file URL returned by Multer
+    if (req.file && (req.file.path || req.file.secure_url)) {
+      finalFileUrl = req.file.path || req.file.secure_url;
+    } else if (fileUrl && fileUrl.trim()) {
+      finalFileUrl = fileUrl.trim();
     }
 
     if (!finalFileUrl) {
